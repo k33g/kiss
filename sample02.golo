@@ -1,4 +1,4 @@
-module sample01
+module sample02
 
 import kiss
 

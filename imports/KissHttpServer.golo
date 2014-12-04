@@ -209,6 +209,9 @@ augment response {
   function contentType = |this| -> this: headers(): get("Content-Type")
   function json = |this, value| -> this: content(JSON.stringify(value))
 
+  function html = |this, value| -> this: contentType("text/html"): content(value)
+  function text = |this, value| -> this: contentType("text/plain"): content(value)
+
   function allowCORS = |this, origin, methods, headers| {
     this: headers(): set("Access-Control-Allow-Origin", origin)
     this: headers(): set("Access-Control-Request-Method", methods)
