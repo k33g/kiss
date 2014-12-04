@@ -1,8 +1,0 @@
-{
-  "name": "kiss",
-  "version": "0.0.0",
-  "main": "imports/KissHttpServer.golo",
-  "ignore": [
-    ".gitignore"
-  ]
-}
