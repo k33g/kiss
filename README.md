@@ -256,6 +256,9 @@ function main = |args| {
 }
 ```
 
+**Remark**: if you don't use `server: whenError(...)`, Kiss displays error message and stacktrace in the browser.
+
+
 ##Redirection
 
 ```coffeescript
@@ -270,8 +273,6 @@ app: method("GET", |route| -> route: equals("/home"), |response, request| {
   response: html("<h1>this is the Home</h1>")
 })
 ```
-
-**Remark**: if you don't use `server: whenError(...)`, Kiss displays error message and stacktrace in the browser.
 
 #TODO:
 
