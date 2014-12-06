@@ -12,9 +12,9 @@ function main = |args| {
     )
 
     # generate html report error
-    app: method("GET", |route| -> route: equals("/generror"), |res, req| {
+    app: method("GET", |route| -> route: equals("/generror"), |response, request| {
       let division = 5 / 0
-      res: content("ouch")
+      response: content("ouch")
     })
 
   })

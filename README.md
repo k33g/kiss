@@ -241,9 +241,9 @@ function main = |args| {
     )
 
     # generate html report error
-    app: method("GET", |route| -> route: equals("/generror"), |res, req| {
+    app: method("GET", |route| -> route: equals("/generror"), |response, request| {
       let division = 5 / 0
-      res: content("ouch")
+      response: content("ouch")
     })
 
   })
@@ -256,6 +256,20 @@ function main = |args| {
 }
 ```
 
+##Redirection
+
+```coffeescript
+# redirect to /home
+app: method("GET", |route| -> route: equals("/"), |response, request| ->
+  response: redirect("/home", 301)
+)
+
+# home page
+app: method("GET", |route| -> route: equals("/home"), |response, request| {
+  response: html("<h1>this is the Home</h1>")
+})
+```
+
 **Remark**: if you don't use `server: whenError(...)`, Kiss displays error message and stacktrace in the browser.
 
 #TODO:
@@ -263,5 +277,4 @@ function main = |args| {
 - set cookie with max-age
 - https
 - documentation
-- redirect
 

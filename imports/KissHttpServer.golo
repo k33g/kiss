@@ -229,6 +229,18 @@ augment response {
     return this
   }
 
+  function redirect = |this, location| {
+      this: code(302): content("Redirecting ..."): headers(): set("Location", location)
+      return this
+  }
+
+  function redirect = |this, location, code| {
+      this: code(code): content("Redirecting ..."): headers(): set("Location", location)
+      this: content("Redirecting ...")
+      this: headers(): set("Location", location)
+      return this
+  }
+
   # === Server-Sent Events ===
   # TODO
 }
