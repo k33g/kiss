@@ -198,9 +198,70 @@ function main = |args| {
 }
 ```
 
+##Handle 404
+
+```coffeescript
+module notfoundAndErrors
+
+import kiss
+
+function main = |args| {
+
+  let server = HttpServer("localhost", 8080, |app| {
+
+    # respond with "Hello World!" on the homepage
+    app: method("GET", |route| -> route: equals("/"), |response, request| ->
+      response : html("<h1>Hello World!</h1>")
+    )
+
+  })
+
+  server: when404(|response, request| {
+    response : html("<h1>404!!!</h1>")
+  })
+
+  server: start(">>> http://localhost:8080/")
+}
+```
+
+##Handle Errors
+
+```coffeescript
+module notfoundAndErrors
+
+import kiss
+
+function main = |args| {
+
+  let server = HttpServer("localhost", 8080, |app| {
+
+    # respond with "Hello World!" on the homepage
+    app: method("GET", |route| -> route: equals("/"), |response, request| ->
+      response : html("<h1>Hello World!</h1>")
+    )
+
+    # generate html report error
+    app: method("GET", |route| -> route: equals("/generror"), |res, req| {
+      let division = 5 / 0
+      res: content("ouch")
+    })
+
+  })
+
+  server: whenError(|response, request, error| {
+    response : html("<h1>Error!!!</h1><h2>" + error: getMessage() + "</h2>")
+  })
+
+  server: start(">>> http://localhost:8080/")
+}
+```
+
+**Remark**: if you don't use `server: whenError(...)`, Kiss displays error message and stacktrace in the browser.
+
 #TODO:
 
 - set cookie with max-age
-- 404 management
+- https
 - documentation
+- redirect
 

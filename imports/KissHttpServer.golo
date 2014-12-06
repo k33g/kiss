@@ -246,6 +246,7 @@ augment httpExchange {
       this: request(): parameters(params)
       work(this: response(), this: request())
     }
+    return this
   }
 
   function route = |this, method, routeTemplate, condition, work| {
@@ -256,6 +257,7 @@ augment httpExchange {
       this: request(): parameters(params)
       work(this: response(), this: request())
     }
+    return this
   }
 
   function method = |this, method, work| {
@@ -317,6 +319,8 @@ augment httpExchange {
     return this
   } # end of function static
 
+
+
 } # end of augment httpExchange
 
 
@@ -324,9 +328,20 @@ struct httpServer = {
     host
   , port
   , _serverInstance
+  , _when404
+  , _whenError
 }
 
 augment httpServer {
+
+  function when404 = |this, workWenSomethingWrong| {
+    this: _when404(workWenSomethingWrong)
+  }
+
+  function whenError = |this, workWenSomethingWrong| {
+    this: _whenError(workWenSomethingWrong)
+  }
+
   function initialize = |this, work| {
 
     let env = WorkerEnvironment.builder(): withCachedThreadPool()
@@ -390,12 +405,24 @@ augment httpServer {
         try {
           work(application)
         } catch (error) {
+          application: response(): code(501)
+          if this: _whenError() isnt null {
+            this: _whenError()(application: response(), application: request(), error)
+          } else {
+            application: response(): headers(): set("Content-Type", "text/html")
+            application: response(): content(errorReport(error))
+          }
 
-          application: response(): headers(): set("Content-Type", "text/html")
-          application: response(): content(errorReport(error))
+        } finally {
+          # handle 404
+          if application: response(): content(): length() is 0 {
+            application: response(): code(404)
+            if this: _when404() isnt null { this: _when404()(application: response(), application: request())}
+          }
+
+          send(exchange, application)
         }
 
-        send(exchange, application)
         #if message:equals("kill") {env: shutdown()}
       }): send(exchange)
 
