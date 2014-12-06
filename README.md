@@ -279,4 +279,4 @@ app: method("GET", |route| -> route: equals("/home"), |response, request| {
 - set cookie with max-age
 - https
 - documentation
-
+- SSE
