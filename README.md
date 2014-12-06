@@ -262,6 +262,7 @@ function main = |args| {
 # redirect to /home
 app: method("GET", |route| -> route: equals("/"), |response, request| ->
   response: redirect("/home", 301)
+  # or response: redirect("/home"), default status code is 302
 )
 
 # home page
