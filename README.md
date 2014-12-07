@@ -279,9 +279,39 @@ You have just to put your jars in the jars directory. Then you can run your proj
 
     golo golo --classpath jars/*.jar --files imports/*.golo main.golo
 
+##Watching mode
+
+Kiss comes with a watching mode, which is useful to detect files change. For example, you can use it to exit and relaunch Kiss to take changes in account or run some tasks when assets change.
+
+**Example:**
+
+Add this to your main code (see `main.golo` or `/samples/watch.mode/watch.mode.golo`:
+
+```coffeescript
+server: watch(["/", "/public", "/public/js"], |events| {
+    events: each(|event| -> println(event: kind() + " " + event: context()))
+    java.lang.System.exit(1)
+})
+```
+
+And run your project with a `sh` script like that:
+
+    #!/bin/sh
+    #
+
+    RC=1
+    #trap "echo CTRL-C was pressed" 2
+    trap "exit 1" 2
+    while [ $RC -ne 0 ] ; do
+       golo golo --classpath jars/*.jar --files imports/*.golo main.golo
+       RC=$?
+    done
+
+*See `kiss.dev.sh`*
 
 #TODO:
 
+- Explain how to augment kiss
 - Explain how to "mavenize" a kiss project
 - set cookie with max-age
 - https
