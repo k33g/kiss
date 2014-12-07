@@ -354,6 +354,52 @@ augment httpServer {
     this: _whenError(workWenSomethingWrong)
   }
 
+  function watch = |this, directories, work| { # "/"
+
+    let env = WorkerEnvironment.builder(): withFixedThreadPool()
+
+    let getWatcherWorker = -> env: spawn(|path| {
+
+      while (true) {
+        try {
+          let watcher = java.nio.file.FileSystems.getDefault(): newWatchService() # WatchService
+
+          path: register(
+              watcher
+            , java.nio.file.StandardWatchEventKinds.ENTRY_CREATE()
+            , java.nio.file.StandardWatchEventKinds.ENTRY_DELETE()
+            , java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY()
+          )
+
+          let watchKey = watcher: take() # WatchKey
+
+          let events = watchKey: pollEvents()
+
+          if events: size() > 0 {
+            work(events)
+          }
+
+
+
+        } catch (error) {
+          println(error: getMessage())
+          println(error)
+          error: getStackTrace(): asList(): each(|row| {
+            println(row: toString())
+          })
+        }
+      }
+
+    }) # end of getWatcherWorker
+
+    directories: each(|directory| {
+      println("Watching " + directory + "...")
+      getWatcherWorker(): send(java.nio.file.Paths.get(java.io.File("."): getCanonicalPath() + directory))
+    })
+
+  }
+
+
   function initialize = |this, work| {
 
     let env = WorkerEnvironment.builder(): withCachedThreadPool()
@@ -470,6 +516,7 @@ augment httpServer {
   function stop = |this, sec| {
     this: _serverInstance(): stop(sec)
   }
+
 }
 
 function HttpServer = |host, port, work| ->
