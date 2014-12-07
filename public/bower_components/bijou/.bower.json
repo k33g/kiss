@@ -1,0 +1,14 @@
+{
+  "name": "bijou",
+  "homepage": "https://github.com/andhart/bijou",
+  "_release": "36ba978fbb",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "36ba978fbb4194ce8ab03cd257e798764d65029d"
+  },
+  "_source": "git://github.com/andhart/bijou.git",
+  "_target": "*",
+  "_originalSource": "bijou",
+  "_direct": true
+}

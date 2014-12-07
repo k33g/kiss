@@ -2,10 +2,6 @@ module kiss
 
 import gololang.concurrent.workers.WorkerEnvironment
 
-# Inspiration
-#
-# org.springframework.web.util : Class UriTemplate
-
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -17,6 +13,9 @@ struct uriTemplate = {
 
 }
 
+# Inspiration
+#
+# org.springframework.web.util : Class UriTemplate
 augment uriTemplate {
   # Determine if uri is matched by this uri template and return a map of variable
   # values if it does.

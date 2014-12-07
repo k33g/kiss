@@ -1,4 +1,4 @@
-kiss
+Kiss
 ====
 
 Fast, unopinionated, minimalist web framework for Golo 
@@ -285,7 +285,7 @@ Kiss comes with a watching mode, which is useful to detect files change. For exa
 
 **Example:**
 
-Add this to your main code (see `main.golo` or `/samples/watch.mode/watch.mode.golo`:
+Add this to your main code (see `main.golo` or `/samples/watch.mode/watch.mode.golo`):
 
 ```coffeescript
 server: watch(["/", "/public", "/public/js"], |events| {

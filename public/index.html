@@ -3,12 +3,26 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>Kiss</title>
-    <link rel="stylesheet" href="css/bijou.min.css">
+    <link rel="stylesheet" href="bower_components/bijou/css/bijou.min.css">
+    <link rel="stylesheet" href="css/precode.css">
 </head>
 <body>
     <div class="container">
-        <h3>Kiss</h3>
-        <h4>Fast, unopinionated, minimalist web framework for <a href="http://golo-lang.org/">Golo</a></h4>
     </div>
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/showdown/compressed/showdown.js"></script>
+    <script src="bower_components/vue/dist/vue.min.js"></script>
+    <script src="js/main.js"></script>
+
+    <script>
+        var converter = new Showdown.converter();
+        $(function() {
+            // Handler for .ready() called.
+            $.get("intro.md").then(function (data) {
+                $(".container").html(converter.makeHtml(data));
+            })
+        });
+    </script>
 </body>
 </html>
