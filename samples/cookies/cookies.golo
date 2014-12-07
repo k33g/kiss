@@ -6,8 +6,9 @@ function main = |args| {
 
   let server = HttpServer("localhost", 8080, |app| {
 
-    # static assets location
-    app: static("/public", "index.html")
+    app: method("GET", |route| -> route: equals("/"), |res, req| {
+      res: html("<h1>Yo!</h1>")
+    })
 
     # cookies management
 

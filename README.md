@@ -3,7 +3,6 @@ kiss
 
 Fast, unopinionated, minimalist web framework for Golo 
 
-
 ##Install
 
     git clone  https://github.com/k33g/kiss.git project_name
@@ -274,8 +273,16 @@ app: method("GET", |route| -> route: equals("/home"), |response, request| {
 })
 ```
 
+##Use external jar(s)
+
+You have just to put your jars in the jars directory. Then you can run your project as this:
+
+    golo golo --classpath jars/*.jar --files imports/*.golo main.golo
+
+
 #TODO:
 
+- Explain how to "mavenize" a kiss project
 - set cookie with max-age
 - https
 - documentation
