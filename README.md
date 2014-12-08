@@ -313,9 +313,48 @@ And run your project with a `sh` script like that:
 
 *See `kiss.dev.sh`*
 
+##Pimp my Kiss framework ... Or how to augment power of Kiss
+
+There is a nice ability with Golo, you can augment Java classes and Golo structures (see this [http://golo-lang.org/documentation/next/index.html#_augmenting_classes](http://golo-lang.org/documentation/next/index.html#_augmenting_classes)). And of course you can do that with **Kiss**:
+
+When you write this:
+
+```coffeescript
+let server = HttpServer("localhost", 8080, |app| {
+
+  app: route("GET", "/hello", |res, req| -> res: html("<h1>Hello!</h1>""))
+
+})
+```
+
+The `app` parameter is an instance of `kiss.httpExchange`, so if you don't like the grammar of **Kiss** to define routes, you can do something like that:
+
+```coffeescript
+augment kiss.types.httpExchange {
+  function GET = |this, templateRoute, work| -> this: route("GET", templateRoute, work)
+  function POST = |this, templateRoute, work| -> this: route("POST", templateRoute, work)
+  # etc. ...
+} 
+```
+
+and now, you can use it, like that:
+
+```coffeescript
+  app: GET("/hello", |res, req| -> res: html("<h1>Hello!</h1>"))
+
+  app: POST("/hi", |res, req| { 
+    # foo 
+  })
+```
+
+**And, you can do that with**:
+
+- `response` structure (`kiss.types.response`)
+- `request` structure (`kiss.types.request`)
+- and even with `httpServer` (`kiss.types.httpServer`)
+
 #TODO:
 
-- Explain how to augment kiss
 - Explain how to "mavenize" a kiss project
 - set cookie with max-age
 - https
