@@ -1,21 +1,25 @@
 Kiss
 ====
 
-Fast, unopinionated, minimalist web framework for Golo 
+Fast, unopinionated, minimalist web framework for [Golo](http://golo-lang.org/) 
 
 ##Install
 
     git clone  https://github.com/k33g/kiss.git project_name
 
+###Prerequisites
+
+You have to install [Golo](http://golo-lang.org/). Golo is a "Java jar" (Only Java 7 or 8), so you've just have to declare it in your path. Something like that:
+
+    GOLO_HOME=/path_to_golo_directory
+    export GOLO_HOME
+    export PATH=$PATH:$GOLO_HOME/bin
+
 ##Run it
 
     golo golo --files imports/*.golo main.golo
 
-    # or;
-    golo golo --files imports/*.golo sample01.golo
-
-    # or:
-    golo golo --files imports/*.golo sample02.golo
+**Remark**: `main.golo` is you application file and you need `KissHttpServer.golo` (located in `imports` directory).
 
 ##Hello world example
 
