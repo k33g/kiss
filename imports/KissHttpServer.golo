@@ -205,7 +205,19 @@ struct response = {
   , exchange
 }
 
+
 augment response {
+
+  function send = |this| {
+    this: exchange(): sendResponseHeaders(this: code(), this: content(): length())
+    this: exchange(): getResponseBody(): write(this: content(): getBytes())
+    this: exchange(): close()  
+  }
+
+  function flush = |this| {
+    # fooo
+  }
+
   function headers = |this| -> this: exchange(): getResponseHeaders()
 
   function contentType = |this, content_type| {
@@ -214,10 +226,10 @@ augment response {
   }
   function contentType = |this| -> this: headers(): get("Content-Type")
 
-  function json = |this, value| -> this: contentType("application/json"): content(JSON.stringify(value))
+  function json = |this, value| -> this: contentType("application/json"): content(JSON.stringify(value)): send()
 
-  function html = |this, value| -> this: contentType("text/html"): content(value)
-  function text = |this, value| -> this: contentType("text/plain"): content(value)
+  function html = |this, value| -> this: contentType("text/html"): content(value): send()
+  function text = |this, value| -> this: contentType("text/plain"): content(value): send()
 
   function allowCORS = |this, origin, methods, headers| {
     this: headers(): set("Access-Control-Allow-Origin", origin)
@@ -317,6 +329,7 @@ augment httpExchange {
       res
         : contentType("text/html")
         : content(fileToText(path, "UTF-8"))
+        : send()
     })
 
     # Serve assets
@@ -330,6 +343,7 @@ augment httpExchange {
         res
           : contentType(contentTypeOfAsset)
           : content(content)
+          : send()
       }
 
     })
@@ -413,11 +427,11 @@ augment httpServer {
     #let env = WorkerEnvironment.builder(): withFixedThreadPool()
     #let env = WorkerEnvironment.builder(): withFixedThreadPool(10)
 
-    let send = |exchange, application| {
-      exchange: sendResponseHeaders(application: response(): code(), application: response(): content(): length())
-      exchange: getResponseBody(): write(application: response(): content(): getBytes())
-      exchange: close() # or flush
-    }
+    #let send = |exchange, application| {
+    #  exchange: sendResponseHeaders(application: response(): code(), application: response(): content(): length())
+    #  exchange: getResponseBody(): write(application: response(): content(): getBytes())
+    #  exchange: close() # or flush
+    #}
 
     let errorReport = |error| {
       let stackTrace = list[]
@@ -479,15 +493,16 @@ augment httpServer {
             application: response(): headers(): set("Content-Type", "text/html")
             application: response(): content(errorReport(error))
           }
-
+          application: response(): send()
         } finally {
           # handle 404
           if application: response(): content(): length() is 0 {
             application: response(): code(404)
             if this: _when404() isnt null { this: _when404()(application: response(), application: request())}
+            application: response(): send()
           }
 
-          send(exchange, application)
+          #send(exchange, application)
         }
 
         #if message:equals("kill") {env: shutdown()}
@@ -505,7 +520,8 @@ augment httpServer {
             request("", exchange, null)
           )
 
-      send(exchange, application)
+      application: response(): send()
+      #send(exchange, application)
 
       this: _serverInstance(): stop(5)
       env: shutdown()
