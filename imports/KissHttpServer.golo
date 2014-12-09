@@ -205,7 +205,6 @@ struct response = {
   , exchange
 }
 
-
 augment response {
 
   function send = |this| {
@@ -214,13 +213,6 @@ augment response {
     this: exchange(): close()  
   }
 
-  # SSE support try ...
-  function data = |this, value| {
-    # set content
-  }
-  function flush = |this| {
-    # foo ... like send but without close but flush
-  }
 
   function headers = |this| -> this: exchange(): getResponseHeaders()
 
@@ -266,7 +258,24 @@ augment response {
   }
 
   # === Server-Sent Events ===
-  # TODO
+  # http://www.html5rocks.com/en/tutorials/eventsource/basics/
+  function SSEInit = |this| {
+    #let responseHeaders = this: exchange(): getResponseHeaders()
+    this: headers(): set("Content-Type", "text/event-stream;charset=UTF-8") # ? ;charset=UTF-8
+    this: headers(): set("Cache-Control", "no-cache")
+    this: headers(): set("Connection", "keep-alive")
+    
+    this: exchange(): sendResponseHeaders(200, 0)
+    this: content(".") # avoid 404, see KissHttpServer.golo
+    return this
+  }
+
+  function SSEWrite = |this, data| {
+    let SSEData = "data:"+ data +"\n\n"
+    this: exchange(): getResponseBody(): write(SSEData: getBytes())
+    this: exchange(): getResponseBody(): flush()
+    return this
+  }
 }
 
 
@@ -493,25 +502,26 @@ augment httpServer {
           work(application)
         } catch (error) {
           application: response(): code(501)
+
           if this: _whenError() isnt null {
             this: _whenError()(application: response(), application: request(), error)
+            application: response(): send()
           } else {
             application: response(): headers(): set("Content-Type", "text/html")
             application: response(): content(errorReport(error))
+            application: response(): send()
           }
-          application: response(): send()
+          
         } finally {
           # handle 404
-          if application: response(): content(): length() is 0 {
+
+          if application: response(): content(): length() is 0 { # TODO: find way to better manage handle of 404
             application: response(): code(404)
             if this: _when404() isnt null { this: _when404()(application: response(), application: request())}
             application: response(): send()
-          }
-
-          #send(exchange, application)
+          } 
         }
 
-        #if message:equals("kill") {env: shutdown()}
       }): send(exchange)
 
     })

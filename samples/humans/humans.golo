@@ -1,8 +1,9 @@
-module sample01
+module humans
 
 import kiss
 
 function main = |args| {
+
 
   let server = HttpServer("localhost", 8080, |app| {
 
@@ -80,7 +81,7 @@ function main = |args| {
     })
 
   })
-
+  
   server: start(">>> http://localhost:8080/")
-
+  
 }
