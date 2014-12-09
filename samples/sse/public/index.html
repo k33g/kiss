@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Kiss</title>
+    <link rel="stylesheet" href="css/bijou.min.css">
+</head>
+<body>
+    <div class="container">
+        <h3>Kiss</h3>
+        <h4>Humans sample / wip</h4>
+    </div>
+  <script>
+    var source = new EventSource('/sse');
+    
+    source.addEventListener('message', function(e) {
+      console.log(e.data);
+    }, false);
+
+    source.addEventListener('open', function(e) {
+      // Connection was opened.
+      console.log("Connection was opened.")
+    }, false);
+
+    source.addEventListener('error', function(e) {
+      if (e.readyState == EventSource.CLOSED) {
+        // Connection was closed.
+        console.log("Connection was closed.")
+      }
+    }, false);
+
+  </script>
+</body>
+</html>

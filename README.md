@@ -353,10 +353,46 @@ and now, you can use it, like that:
 - `request` structure (`kiss.types.request`)
 - and even with `httpServer` (`kiss.types.httpServer`)
 
+##Stream Updates with Server-Sent Events
+
+If you want developp a stream service, you have to write something like this:
+
+```coffeescript
+# server side
+
+app: route("GET", "/sse", |res, req| {
+  res: SSEInit()
+  res: SSEWrite("plop"): SSEWrite(uuid()): SSEWrite(java.util.Date(): toString())        
+})
+```
+
+and 
+
+```javascript
+var source = new EventSource('/sse');
+
+source.addEventListener('message', function(e) {
+  console.log(e.data);
+}, false);
+
+source.addEventListener('open', function(e) {
+  // Connection was opened.
+  console.log("Connection was opened.")
+}, false);
+
+source.addEventListener('error', function(e) {
+  if (e.readyState == EventSource.CLOSED) {
+    // Connection was closed.
+    console.log("Connection was closed.")
+  }
+}, false);
+```
+
 #TODO:
 
 - Explain how to "mavenize" a kiss project
 - set cookie with max-age
 - https
 - documentation
-- SSE
+- websockets
+- performances tests
