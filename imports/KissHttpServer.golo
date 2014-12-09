@@ -406,6 +406,7 @@ augment httpServer {
   }
 
 
+
   function initialize = |this, work| {
 
     let env = WorkerEnvironment.builder(): withCachedThreadPool()
@@ -415,7 +416,7 @@ augment httpServer {
     let send = |exchange, application| {
       exchange: sendResponseHeaders(application: response(): code(), application: response(): content(): length())
       exchange: getResponseBody(): write(application: response(): content(): getBytes())
-      exchange: close()
+      exchange: close() # or flush
     }
 
     let errorReport = |error| {
@@ -449,6 +450,8 @@ augment httpServer {
       java.net.InetSocketAddress(this: host(), this: port()), 0
     ))
 
+    # parameter is a handler (closure) : com.sun.net.httpserver.HttpHandler
+    # exchange is com.sun.net.httpserver.HttpExchange
     this: _serverInstance(): createContext("/", |exchange| {
 
       env: spawn(|exchange| {
