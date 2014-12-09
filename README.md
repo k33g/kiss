@@ -369,6 +369,8 @@ app: route("GET", "/sse", |res, req| {
 and 
 
 ```javascript
+// browser side
+
 var source = new EventSource('/sse');
 
 source.addEventListener('message', function(e) {
