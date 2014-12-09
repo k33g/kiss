@@ -398,3 +398,4 @@ source.addEventListener('error', function(e) {
 - documentation
 - websockets
 - performances tests
+- improve SSE (json and multilines)
