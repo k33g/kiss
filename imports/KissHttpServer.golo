@@ -214,8 +214,12 @@ augment response {
     this: exchange(): close()  
   }
 
+  # SSE support try ...
+  function data = |this, value| {
+    # set content
+  }
   function flush = |this| {
-    # fooo
+    # foo ... like send but without close but flush
   }
 
   function headers = |this| -> this: exchange(): getResponseHeaders()
@@ -249,6 +253,7 @@ augment response {
 
   function redirect = |this, location| {
       this: code(302): content("Redirecting ..."): headers(): set("Location", location)
+      this: send()
       return this
   }
 
@@ -256,6 +261,7 @@ augment response {
       this: code(code): content("Redirecting ..."): headers(): set("Location", location)
       this: content("Redirecting ...")
       this: headers(): set("Location", location)
+      this: send()
       return this
   }
 
