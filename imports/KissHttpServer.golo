@@ -583,24 +583,6 @@ augment httpServer {
     this: _serverInstance(): stop(sec)
   }
 
-  # contentType: "text/plain; charset=utf-8" or "application/json; charset=utf-8"
-  # usage:
-  # run promise
-  #  getHttpRequest("http://localhost:8080/hello", "application/json; charset=utf-8")
-  #    : onSet(|responseCode, responseMessage, responseText| { # if success
-  #      # foo
-  #    })
-  #    : onFail(|err| { # if failed
-  #      println(err: getMessage())
-  #    })
-
-  #  struct response = {
-  #      content
-  #    , code      # status code
-  #    , message   # not used for the moment
-  #    , exchange
-  #  }
-
 
   function getHttpRequest = |this, url, contentType| {
 
@@ -625,7 +607,6 @@ augment httpServer {
             "UTF-8"
           ): useDelimiter("\\A"): next() # String responseText
 
-          # responseCode, responseMessage, responseText
           resolve(response(responseText, responseCode, responseMessage, null))
 
         } catch(error) {
@@ -651,13 +632,12 @@ augment httpServer {
     howMany: times(|index|->
       this: getHttpRequest("http://"+ this: host() + ":" + this: port() +"/warm/up/" + uuid(), "application/json; charset=utf-8")
         : onSet(|resp| { # if success
+          JSON.parse(JSON.stringify(resp))
           counter: set(index)
-          #println(index + " " + resp)
         })
         : onFail(|err| { # if failed
-          #println(err: getMessage())
         })
-    ) #TODO: count in onSet to know when finished
+    ) 
 
   }
 
