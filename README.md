@@ -390,6 +390,16 @@ source.addEventListener('error', function(e) {
 }, false);
 ```
 
+##Warm up Kiss server
+
+Sometimes, it could be interesting to warm up the serveur:
+
+```coffeescript
+  server: start(">>> http://localhost:8080/")
+  server: warmUp(20000) # number of loops as parameter, 10000 seems to be a good number
+```
+
+
 #TODO:
 
 - Explain how to "mavenize" a kiss project
