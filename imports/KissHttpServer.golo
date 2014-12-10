@@ -6,12 +6,6 @@ import gololang.Async
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
-struct bob = { foo }
-augment bob {
-  function hello = |this| {
-    println("hello")
-  }
-} 
 
 struct uriTemplate = {
     template            # String
