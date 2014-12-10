@@ -90,7 +90,5 @@ function main = |args| {
   
   server: start(">>> http://localhost:8080/")
   server: warmUp(20000)
-
-
   
 }
