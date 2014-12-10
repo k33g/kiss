@@ -1,6 +1,7 @@
 module kiss
 
 import gololang.concurrent.workers.WorkerEnvironment
+import gololang.Async
 
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -202,6 +203,7 @@ augment request {
 struct response = {
     content
   , code      # status code
+  , message   # not used for the moment
   , exchange
 }
 
@@ -377,6 +379,8 @@ struct httpServer = {
   , _serverInstance
   , _when404
   , _whenError
+  , env
+  , application
 }
 
 augment httpServer {
@@ -447,6 +451,8 @@ augment httpServer {
     #  exchange: getResponseBody(): write(application: response(): content(): getBytes())
     #  exchange: close() # or flush
     #}
+    
+    this: env(env) # used with getHttpRequest()
 
     let errorReport = |error| {
       let stackTrace = list[]
@@ -491,7 +497,7 @@ augment httpServer {
         let stringRead = bufferedReader:readLine()
 
         let application = httpExchange()
-          : response(response("", 200, exchange))
+          : response(response("", 200, "", exchange))
           : request(
               request(stringRead, exchange, null)
             )
@@ -526,12 +532,36 @@ augment httpServer {
 
     })
 
+    this: _serverInstance(): createContext("/warm/up", |exchange| {
+
+      env: spawn(|exchange| {
+        let headers = exchange: getResponseHeaders()
+        headers: set("Content-Type", "application/json") #default json
+
+        # : response(response("", 200, "", exchange))
+
+        let params = UriTemplate("/warm/up/{id}"): matchString(exchange: getRequestURI(): toString())
+        #println(params)
+
+        let application = httpExchange()
+          : response(response(JSON.stringify(map[["message", params: get("id")]]), 200, "OK", exchange))
+          : request(
+              request("", exchange, null)
+            )
+
+        application: response(): send()
+        #send(exchange, application)
+
+      }): send(exchange)
+
+    })
+
     this: _serverInstance(): createContext("/shutdown", |exchange| {
       let headers = exchange: getResponseHeaders()
       headers: set("Content-Type", "application/json") #default json
 
       let application = httpExchange()
-        : response(response(JSON.stringify(map[["message", "bye"]]), headers, 200, exchange))
+        : response(response(JSON.stringify(map[["message", "bye"]]), 200, "", exchange))
         : request(
             request("", exchange, null)
           )
@@ -542,6 +572,8 @@ augment httpServer {
       this: _serverInstance(): stop(5)
       env: shutdown()
     })
+
+
     return this
   }
   function start = |this| {
@@ -556,6 +588,84 @@ augment httpServer {
   }
   function stop = |this, sec| {
     this: _serverInstance(): stop(sec)
+  }
+
+  # contentType: "text/plain; charset=utf-8" or "application/json; charset=utf-8"
+  # usage:
+  # run promise
+  #  getHttpRequest("http://localhost:8080/hello", "application/json; charset=utf-8")
+  #    : onSet(|responseCode, responseMessage, responseText| { # if success
+  #      # foo
+  #    })
+  #    : onFail(|err| { # if failed
+  #      println(err: getMessage())
+  #    })
+
+  #  struct response = {
+  #      content
+  #    , code      # status code
+  #    , message   # not used for the moment
+  #    , exchange
+  #  }
+
+
+  function getHttpRequest = |this, url, contentType| {
+
+    return promise(): initialize(|resolve, reject| {
+      # doing something asynchronous
+      this: env(): spawn(|message| {
+
+        try {
+          let obj = java.net.URL(url) # URL obj
+          let con = obj: openConnection() # HttpURLConnection con (Cast?)
+          #optional default is GET
+          con: setRequestMethod("GET")
+          con: setRequestProperty("Content-Type", contentType)
+          #add request header
+          con: setRequestProperty("User-Agent", "Mozilla/5.0")
+
+          let responseCode = con: getResponseCode() # int responseCode
+          let responseMessage = con: getResponseMessage() # String responseMessage
+
+          let responseText = java.util.Scanner(
+            con: getInputStream(), 
+            "UTF-8"
+          ): useDelimiter("\\A"): next() # String responseText
+
+          # responseCode, responseMessage, responseText
+          resolve(response(responseText, responseCode, responseMessage, null))
+
+        } catch(error) {
+          reject(error)
+        }
+
+      }): send("go")
+
+    })
+
+  }
+
+  function warmUp = |this, howMany| {
+    println("Starting warm up ...")
+    let counter = Observable(0)
+    counter: onChange(|value| {
+      #if (value % 2): equals(0) { print(".") }
+      if value >= (howMany - 1) {
+        println("Warm up ended!")
+      }
+    })
+
+    howMany: times(|index|->
+      this: getHttpRequest("http://"+ this: host() + ":" + this: port() +"/warm/up/" + uuid(), "application/json; charset=utf-8")
+        : onSet(|resp| { # if success
+          counter: set(index)
+          #println(index + " " + resp)
+        })
+        : onFail(|err| { # if failed
+          #println(err: getMessage())
+        })
+    ) #TODO: count in onSet to know when finished
+
   }
 
 }

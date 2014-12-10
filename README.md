@@ -399,3 +399,5 @@ source.addEventListener('error', function(e) {
 - websockets
 - performances tests
 - improve SSE (json and multilines)
+- make modules
+

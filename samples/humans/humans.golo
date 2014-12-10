@@ -80,8 +80,17 @@ function main = |args| {
       res: content("ouch")
     })
 
+    app: route("GET", "/warm/up/{id}", |res, req| {
+      res: json(DynamicObject()
+        : id(req: params("id"))
+      )
+    })
+
   })
   
   server: start(">>> http://localhost:8080/")
+  server: warmUp(20000)
+
+
   
 }
