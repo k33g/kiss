@@ -409,5 +409,5 @@ Sometimes, it could be interesting to warm up the serveur:
 - websockets
 - performances tests
 - improve SSE (json and multilines)
-- make modules
+- make modules (or not)
 

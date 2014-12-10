@@ -113,13 +113,12 @@ function UriTemplate = |template| { # string
 
 }
 
-
 augment java.net.URI {
   function parts = |this| -> this: toString(): split("/"): asList(): filter(|part| -> not part: equals(""))
 }
 
 # module level state
-let contenTypes = map[
+let contentTypes = map[
     ["htm","text/html;charset=UTF-8"]
   , ["html","text/html;charset=UTF-8"]
   , ["md","text/html;charset=UTF-8"]
@@ -148,12 +147,8 @@ let contenTypes = map[
   , ["txt","text/plain;charset=UTF-8"]
 ]
 
-function getContentTypes = -> contenTypes
+function getContentTypes = -> contentTypes
 
-struct httpExchange = {
-    response
-  , request
-}
 
 struct request = {
     data
@@ -274,6 +269,10 @@ augment response {
   }
 }
 
+struct httpExchange = {
+    response
+  , request
+}
 
 augment httpExchange {
 
@@ -329,7 +328,7 @@ augment httpExchange {
 
   # getContentTypes()
   function contentTypeOfFile  = |this, path| ->
-    contenTypes
+    getContentTypes()
       : get(path: substring(path: lastIndexOf(".") + 1))
       orIfNull "text/plain;charset=UTF-8"
 
