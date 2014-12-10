@@ -13,7 +13,9 @@ function main = |args| {
 
     app: route("GET", "/sse", |res, req| {
       res: SSEInit()
-      50: times(|index| -> res: SSEWrite(index + " " + java.util.Date()): SSEWrite(uuid()))        
+      500: times(|index| {
+        res: SSEWrite(index + " " + java.util.Date()): SSEWrite(uuid())
+      })
     })
 
   })

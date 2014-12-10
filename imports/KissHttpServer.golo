@@ -199,11 +199,12 @@ struct response = {
 augment response {
 
   function send = |this| {
+    this: message("OK")
+    #TODO: send message?
     this: exchange(): sendResponseHeaders(this: code(), this: content(): length())
     this: exchange(): getResponseBody(): write(this: content(): getBytes())
     this: exchange(): close()  
   }
-
 
   function headers = |this| -> this: exchange(): getResponseHeaders()
 
@@ -257,7 +258,8 @@ augment response {
     this: headers(): set("Connection", "keep-alive")
     
     this: exchange(): sendResponseHeaders(200, 0)
-    this: content(".") # avoid 404, see KissHttpServer.golo
+    #this: content(".") # avoid 404, see KissHttpServer.golo
+    this: message("OK") # avoid 404, see KissHttpServer.golo
     return this
   }
 
@@ -490,7 +492,7 @@ augment httpServer {
         let stringRead = bufferedReader:readLine()
 
         let application = httpExchange()
-          : response(response("", 200, "", exchange))
+          : response(response("", 200, null, exchange))
           : request(
               request(stringRead, exchange, null)
             )
@@ -499,8 +501,9 @@ augment httpServer {
 
         try {
           work(application)
+
         } catch (error) {
-          application: response(): code(501)
+          application: response(): code(501): message("KO")
 
           if this: _whenError() isnt null {
             this: _whenError()(application: response(), application: request(), error)
@@ -512,11 +515,17 @@ augment httpServer {
           }
           
         } finally {
-          # handle 404
 
-          if application: response(): content(): length() is 0 { # TODO: find way to better manage handle of 404
+          # handle 404
+          # if application: response(): message() is null and application: response(): content(): length() is 0  {
+          if application: response(): message() is null {
             application: response(): code(404)
-            if this: _when404() isnt null { this: _when404()(application: response(), application: request())}
+            application: response(): headers(): set("Content-Type", "text/html")
+            if this: _when404() isnt null {
+              this: _when404()(application: response(), application: request())
+            } else {
+              application: response(): content("<h1>Error 404</h1>")
+            }
             application: response(): send()
           } 
         }

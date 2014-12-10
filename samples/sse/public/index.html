@@ -9,12 +9,15 @@
     <div class="container">
         <h3>Kiss</h3>
         <h4>Humans sample / wip</h4>
+        <code></code>
     </div>
+
   <script>
     var source = new EventSource('/sse');
     
     source.addEventListener('message', function(e) {
-      console.log(e.data);
+        console.log(e.data);
+        document.querySelector("code").innerHTML = document.querySelector("code").innerHTML + e.data;
     }, false);
 
     source.addEventListener('open', function(e) {

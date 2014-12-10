@@ -35,7 +35,8 @@ function main = |args| {
     })
 
     # GET
-    # ie: http://localhost:8080/humans
+    # ie: http://localhost:9000/humans
+    # js: $.getJSON("http://localhost:9000/humans").done(function(data){ console.log(data); })
     # return an array of json objects to the browser
     #app: method("GET", |route| -> route: equals("/humans"), |res, req| {
     app: route("GET", "/humans", |res, req| {
