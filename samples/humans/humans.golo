@@ -5,7 +5,7 @@ import kiss
 function main = |args| {
 
 
-  let server = HttpServer("localhost", 8080, |app| {
+  let server = HttpServer("localhost", 9000, |app| {
 
     # hello is displayed at each request
     #app: all(|res, req| { println("Hello") })
@@ -37,7 +37,8 @@ function main = |args| {
     # GET
     # ie: http://localhost:8080/humans
     # return an array of json objects to the browser
-    app: method("GET", |route| -> route: equals("/humans"), |res, req| {
+    #app: method("GET", |route| -> route: equals("/humans"), |res, req| {
+    app: route("GET", "/humans", |res, req| {
       res: json([
         map[["id", uuid()], ["firstName", "Bob"],["lastName", "Morane"]],
         map[["id", uuid()], ["firstName", "John"],["lastName", "Doe"]],
@@ -88,7 +89,7 @@ function main = |args| {
 
   })
   
-  server: start(">>> http://localhost:8080/")
-  server: warmUp(10000)
+  server: start(">>> http://localhost:"+ server: port() +"/")
+  server: warmUp(20000)
   
 }
