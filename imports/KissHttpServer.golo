@@ -199,9 +199,10 @@ struct response = {
 augment response {
 
   function send = |this| {
-    this: message("OK")
-    #TODO: send message?
-    this: exchange(): sendResponseHeaders(this: code(), this: content(): length())
+    this: message("OK") #TODO: send message?
+    #  this: exchange(): sendResponseHeaders(this: code(), this: content(): length())
+    this: exchange(): sendResponseHeaders(this: code(), this: content(): getBytes("UTF-8"): length()) #character encoding -> get number of bytes?
+
     this: exchange(): getResponseBody(): write(this: content(): getBytes())
     this: exchange(): close()  
   }
@@ -214,10 +215,10 @@ augment response {
   }
   function contentType = |this| -> this: headers(): get("Content-Type")
 
-  function json = |this, value| -> this: contentType("application/json"): content(JSON.stringify(value)): send()
+  function json = |this, value| -> this: contentType("application/json;charset=UTF-8"): content(JSON.stringify(value)): send()
 
-  function html = |this, value| -> this: contentType("text/html"): content(value): send()
-  function text = |this, value| -> this: contentType("text/plain"): content(value): send()
+  function html = |this, value| -> this: contentType("text/html;charset=UTF-8"): content(value): send()
+  function text = |this, value| -> this: contentType("text/plain;charset=UTF-8"): content(value): send()
 
   function allowCORS = |this, origin, methods, headers| {
     this: headers(): set("Access-Control-Allow-Origin", origin)
