@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Kiss</title>
+</head>
+<body>
+    <div>
+        <h3>Kiss</h3>
+        <h4>Humans sample / wip</h4>
+        <br>
+
+        <human-form></human-form>
+        <br>
+        <humans-list></humans-list>
+
+    </div>
+
+    <script src="js/traceur/traceur.js">
+        traceur.options.experimental = true;
+    </script>
+
+    <script>
+        System.import('js/main').catch(function (e) {console.error(e);});
+    </script>
+
+</body>
+</html>
