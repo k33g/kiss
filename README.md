@@ -475,3 +475,5 @@ Sometimes, it could be interesting to warm up the serveur:
 - websockets
 - provide performances tests
 - improve SSE (json and multilines)
+- add samples with MongoDb and Redis
+
