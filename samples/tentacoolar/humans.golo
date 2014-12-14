@@ -4,6 +4,7 @@ import kiss
 import kiss.request
 import kiss.response
 import kiss.httpExchange
+import kiss.augmentations
 
 function main = |args| {
 
@@ -21,11 +22,11 @@ function main = |args| {
     # static assets location
     app: static("/public", "index.html")
 
-    app: route("GET", "/humans", |res, req| {
+    app: $get("/humans", |res, req| {
       res: json(humans)
     })
 
-    app: route("DELETE", "/humans/{id}", |res, req| {
+    app: $delete("/humans/{id}", |res, req| {
       let userToRemove = humans
         : find(|user| ->
           user: get("_id"): equals(req: params("id"))
@@ -35,7 +36,7 @@ function main = |args| {
     })
 
 
-    app: method("POST", |route| -> route: equals("/humans"), |res, req| {
+    app: $post("/humans", |res, req| {
       let user = req: json() # from json, get data from POST request
       user: put("_id", uuid(): toString())
       humans: add(user)
