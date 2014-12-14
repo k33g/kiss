@@ -22,6 +22,9 @@ Kiss
     module basic.routing
 
     import kiss
+    import kiss.request
+    import kiss.response
+    import kiss.httpExchange
 
     function main = |args| {
 
@@ -66,6 +69,9 @@ Kiss
     module templates.routing
 
     import kiss
+    import kiss.request
+    import kiss.response
+    import kiss.httpExchange
 
     function main = |args| {
 
@@ -91,6 +97,9 @@ Kiss
     module main
 
     import kiss
+    import kiss.request
+    import kiss.response
+    import kiss.httpExchange
 
     function main = |args| {
 

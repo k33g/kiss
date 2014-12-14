@@ -27,6 +27,9 @@ You have to install [Golo](http://golo-lang.org/). Golo is a "Java jar" (Only Ja
 module hello.world
 
 import kiss
+import kiss.request
+import kiss.response
+import kiss.httpExchange
 
 function main = |args| {
 
@@ -50,6 +53,9 @@ function main = |args| {
 module basic.routing
 
 import kiss
+import kiss.request
+import kiss.response
+import kiss.httpExchange
 
 function main = |args| {
 
@@ -95,6 +101,9 @@ function main = |args| {
 module templates.routing
 
 import kiss
+import kiss.request
+import kiss.response
+import kiss.httpExchange
 
 function main = |args| {
 
@@ -121,6 +130,9 @@ function main = |args| {
 module main
 
 import kiss
+import kiss.request
+import kiss.response
+import kiss.httpExchange
 
 function main = |args| {
 
@@ -141,6 +153,9 @@ function main = |args| {
 module main
 
 import kiss
+import kiss.request
+import kiss.response
+import kiss.httpExchange
 
 function main = |args| {
 
@@ -165,6 +180,9 @@ function main = |args| {
 module cookies
 
 import kiss
+import kiss.request
+import kiss.response
+import kiss.httpExchange
 
 function main = |args| {
 
@@ -207,6 +225,9 @@ function main = |args| {
 module notfoundAndErrors
 
 import kiss
+import kiss.request
+import kiss.response
+import kiss.httpExchange
 
 function main = |args| {
 
@@ -233,6 +254,9 @@ function main = |args| {
 module notfoundAndErrors
 
 import kiss
+import kiss.request
+import kiss.response
+import kiss.httpExchange
 
 function main = |args| {
 
@@ -330,7 +354,7 @@ let server = HttpServer("localhost", 8080, |app| {
 The `app` parameter is an instance of `kiss.httpExchange`, so if you don't like the grammar of **Kiss** to define routes, you can do something like that:
 
 ```coffeescript
-augment kiss.types.httpExchange {
+augment kiss.httpExchange.types.httpExchange {
   function GET = |this, templateRoute, work| -> this: route("GET", templateRoute, work)
   function POST = |this, templateRoute, work| -> this: route("POST", templateRoute, work)
   # etc. ...
@@ -349,8 +373,8 @@ and now, you can use it, like that:
 
 **And, you can do that with**:
 
-- `response` structure (`kiss.types.response`)
-- `request` structure (`kiss.types.request`)
+- `response` structure (`kiss.response.types.response`)
+- `request` structure (`kiss.request.types.request`)
 - and even with `httpServer` (`kiss.types.httpServer`)
 
 ##Stream Updates with Server-Sent Events
@@ -407,7 +431,5 @@ Sometimes, it could be interesting to warm up the serveur:
 - https
 - documentation
 - websockets
-- performances tests
+- provide performances tests
 - improve SSE (json and multilines)
-- make modules (or not)
-

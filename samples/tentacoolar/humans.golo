@@ -1,6 +1,9 @@
 module humans
 
 import kiss
+import kiss.request
+import kiss.response
+import kiss.httpExchange
 
 function main = |args| {
 

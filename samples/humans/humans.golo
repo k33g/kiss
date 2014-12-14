@@ -1,6 +1,9 @@
 module humans
 
 import kiss
+import kiss.request
+import kiss.response
+import kiss.httpExchange
 
 function main = |args| {
 
@@ -82,11 +85,6 @@ function main = |args| {
       res: content("ouch")
     })
 
-    app: route("GET", "/warm/up/{id}", |res, req| {
-      res: json(DynamicObject()
-        : id(req: params("id"))
-      )
-    })
 
   })
   
