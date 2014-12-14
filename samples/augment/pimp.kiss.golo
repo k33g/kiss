@@ -9,6 +9,7 @@ augment  kiss.httpExchange.types.httpExchange {
   function GET = |this, templateRoute, work| -> this: route("GET", templateRoute, work)
   function POST = |this, templateRoute, work| -> this: route("POST", templateRoute, work)
   # etc. ...
+  function $get = |this, templateRoute, work| -> this: route("GET", templateRoute, work)
 }
 
 
@@ -19,6 +20,8 @@ function main = |args| {
     app: GET("/hello", |res, req| -> res: json(DynamicObject(): message("hello world!!!")))
     app: GET("/yo", |res, req| -> res: json(DynamicObject(): message("yo")))
     app: GET("/plop", |res, req| -> res: json(DynamicObject(): message("plop")))
+
+    #app: $get("/hi", |res, req| -> res: html("hi"))
   })
 
   server: start(">>> http://localhost:8080/")

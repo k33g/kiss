@@ -4,6 +4,7 @@ import kiss
 import kiss.request
 import kiss.response
 import kiss.httpExchange
+import kiss.augmentations
 
 function main = |args| {
   
@@ -13,7 +14,7 @@ function main = |args| {
 
     app: static("/public", "index.html")
 
-    app: route("GET", "/hello", |res, req| {
+    app: $get("/hello", |res, req| {
       res: json(DynamicObject()
         : message("Hello World!")
         : number(42)

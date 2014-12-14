@@ -4,6 +4,7 @@ import kiss
 import kiss.request
 import kiss.response
 import kiss.httpExchange
+import kiss.augmentations
 
 function main = |args| {
 
@@ -42,7 +43,8 @@ function main = |args| {
     # js: $.getJSON("http://localhost:9000/humans").done(function(data){ console.log(data); })
     # return an array of json objects to the browser
     #app: method("GET", |route| -> route: equals("/humans"), |res, req| {
-    app: route("GET", "/humans", |res, req| {
+    #app: route("GET", "/humans", |res, req| {
+    app: $get("/humans", |res, req| {
       res: json([
         map[["id", uuid()], ["firstName", "Bob"],["lastName", "Morane"]],
         map[["id", uuid()], ["firstName", "John"],["lastName", "Doe"]],
@@ -57,7 +59,8 @@ function main = |args| {
     })
 
     # POST
-    app: method("POST", |route| -> route: equals("/humans"), |res, req| {
+    #app: method("POST", |route| -> route: equals("/humans"), |res, req| {
+    app: $post("/humans", |res, req| {
       let user = req: json() # from json, get data from POST request
       user: put("id", uuid(): toString())
       res

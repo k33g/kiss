@@ -377,6 +377,48 @@ and now, you can use it, like that:
 - `request` structure (`kiss.request.types.request`)
 - and even with `httpServer` (`kiss.types.httpServer`)
 
+##Or, you can use `augmentations.golo`
+
+```coffeescript
+module main
+
+import kiss
+import kiss.request
+import kiss.response
+import kiss.httpExchange
+import kiss.augmentations
+
+function main = |args| {
+
+
+  let server = HttpServer("localhost", 8080, |app| {
+
+    app: static("/public", "index.html")
+
+    app: $get("/hello", |res, req| {
+      res: json(DynamicObject()
+        : message("Hello World!")
+        : number(42)
+      )
+    })
+
+    app: $post("/humans", |res, req| {
+      let user = req: json() # from json, get data from POST request
+      user: put("id", uuid(): toString())
+      res
+        : code(201)
+        : json(user) # return json representation of the user with 201 status code
+    })
+
+  })
+
+  server: start(">>> http://localhost:8080/")
+
+}
+```
+
+And you can use `$put()` and `$delete()` too
+
 ##Stream Updates with Server-Sent Events
 
 If you want developp a stream service, you have to write something like this:
