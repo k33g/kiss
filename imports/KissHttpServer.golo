@@ -9,6 +9,10 @@ import kiss.request
 import kiss.response
 import kiss.httpExchange
 
+struct messageStructure = {
+  message
+}
+function message = |msg| -> messageStructure(msg)
 
 augment java.net.URI {
   function parts = |this| -> this: toString(): split("/"): asList(): filter(|part| -> not part: equals(""))
@@ -78,7 +82,6 @@ augment httpServer {
     })
 
   }
-
 
 
   function initialize = |this, work| {
