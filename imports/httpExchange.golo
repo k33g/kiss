@@ -25,6 +25,7 @@ augment httpExchange {
     return this
   }
 
+  # condition
   function route = |this, method, routeTemplate, condition, work| {
     let params = UriTemplate(routeTemplate): matchString(this: request(): uri(): toString())
     if this: request(): method(): equals(method)
@@ -51,6 +52,7 @@ augment httpExchange {
     return this
   }
 
+  # condition
   function method = |this, method, routeCondition, condition, work| {
 
     if this: request(): method(): equals(method)

@@ -7,4 +7,9 @@ augment  kiss.httpExchange.types.httpExchange {
   function $post = |this, templateRoute, work| -> this: route("POST", templateRoute, work)
   function $delete = |this, templateRoute, work| -> this: route("DELETE", templateRoute, work)
   function $put = |this, templateRoute, work| -> this: route("PUT", templateRoute, work)
+
+  function $get = |this, templateRoute, condition, work| -> this: route("GET", templateRoute, condition, work)
+  function $post = |this, templateRoute, condition, work| -> this: route("POST", templateRoute, condition, work)
+  function $delete = |this, templateRoute, condition, work| -> this: route("DELETE", templateRoute, condition, work)
+  function $put = |this, templateRoute, condition, work| -> this: route("PUT", templateRoute, condition, work)
 }

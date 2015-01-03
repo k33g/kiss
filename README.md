@@ -419,6 +419,47 @@ function main = |args| {
 
 And you can use `$put()` and `$delete()` too
 
+##Protect your routes
+
+```coffeescript
+module main
+
+import kiss
+import kiss.request
+import kiss.response
+import kiss.httpExchange
+import kiss.augmentations
+
+
+function main = |args| {
+
+  let amIanAdministrator = false
+
+  let isAdmin = |res, req| {
+    if amIanAdministrator {
+      return true
+    } else {
+      res: json(message("You're not administrator!!!"))
+      return false
+    }
+  }
+
+  let server = HttpServer("localhost", 8080, |app| {
+    # static assets location
+    app: static("/public", "index.html")
+
+    # the anonymous function is called only id `isAdmin` is true
+    # else `message("You're not administrator!!!")` is send to the browser
+    app: $get("/humans", |res, req| -> isAdmin(res, req), |res, req| {
+      res: json(humans)
+    })
+
+  })
+  server: start(">>> http://localhost:8080/")
+
+}
+```
+
 ##Stream Updates with Server-Sent Events
 
 If you want developp a stream service, you have to write something like this:
