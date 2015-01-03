@@ -37,6 +37,11 @@ function main = |args| {
       res: json(humans)
     })
 
+    # app: route("GET", "/allhumans", ...) is similar to app: $get("/humans", ...)
+    app: route("GET", "/allhumans", |res, req| -> isAdmin(res, req), |res, req| {
+      res: json(humans)
+    })
+
   })
   
   server: start(">>> http://localhost:"+ server: port() +"/")
