@@ -33,12 +33,18 @@ function main = |args| {
     # static assets location
     app: static("/public", "index.html")
 
-    app: $get("/humans", |res, req| -> isAdmin(res, req), |res, req| {
+    app: $get("/humans"
+    , |res, req| -> isAdmin(res, req)
+    , |res, req| {
+      # send all humans
       res: json(humans)
     })
 
     # app: route("GET", "/allhumans", ...) is similar to app: $get("/humans", ...)
-    app: route("GET", "/allhumans", |res, req| -> isAdmin(res, req), |res, req| {
+    app: route("GET", "/allhumans"
+    , |res, req| -> isAdmin(res, req)
+    , |res, req| {
+      # send all humans
       res: json(humans)
     })
 

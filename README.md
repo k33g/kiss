@@ -450,7 +450,10 @@ function main = |args| {
 
     # the anonymous function is called only id `isAdmin` is true
     # else `message("You're not administrator!!!")` is send to the browser
-    app: $get("/humans", |res, req| -> isAdmin(res, req), |res, req| {
+    app: $get("/humans"
+    , |res, req| -> isAdmin(res, req)
+    , |res, req| {
+      # send all humans
       res: json(humans)
     })
 
