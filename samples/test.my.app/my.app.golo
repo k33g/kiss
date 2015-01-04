@@ -10,11 +10,19 @@ import kiss.tests
 
 import gololang.Async
 
-function halfMatcher = -> DynamicObject()
-	: define("toBeHalf", |this, expectedValue| {
-		require(this: actualValue(): equals(expectedValue/2), this: actualValue() + " isn't half " + expectedValue)
+# create your own matcher
+augmentation halfMatcher = {
+	function toBeHalf = |this, expectedValue| {
+		require(
+			this: actualValue(): equals(expectedValue/2),
+			this: actualValue() + " isn't half " + expectedValue
+		)
 		println(" OK: " + this: actualValue() + " is half " + expectedValue)
-	})
+		return this
+	}
+}
+
+augment kiss.tests.types.matchers with halfMatcher
 
 function main = |args| {
 
@@ -57,8 +65,8 @@ function main = |args| {
   # run bdd tests
   #--------------------------------
 
-  getMatchers(): mixin(halfMatcher())
-  expect(4): toBeHalf(8)
+  # try your matcher
+  expect(4): toBeHalf(8): toBeInteger()
 
   describe("Testing welcome routes", {
 

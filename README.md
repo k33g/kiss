@@ -585,29 +585,33 @@ function main = |args| {
 
 ###Add your own matcher
 
-You can easily add matchers to the test module thanks to the Golo DynamicObjects:
+You can easily add matchers to the test module thanks to the Golo named augmentation:
 
 ```coffeescript
 # my little matcher
-function halfMatcher = -> DynamicObject()
-	: define("toBeHalf", |this, expectedValue| {
-		require(this: actualValue(): equals(expectedValue/2), this: actualValue() + " isn't half " + expectedValue)
+augmentation halfMatcher = {
+	function toBeHalf = |this, expectedValue| {
+		require(
+			this: actualValue(): equals(expectedValue/2),
+			this: actualValue() + " isn't half " + expectedValue
+		)
 		println(" OK: " + this: actualValue() + " is half " + expectedValue)
-	})
+		return this # you can chain matchers
+	}
+}
 ```
 
 You have to "graft" the new matcher to the others like that:
 
 ```coffeescript
-getMatchers(): mixin(halfMatcher())
+augment kiss.tests.types.matchers with halfMatcher
 ```
 
 And you can use it like that:
 
 ```coffeescript
-expect(4): toBeHalf(8)
+expect(4): toBeHalf(8): toBeInteger()
 ```
-
 
 ##Warm up Kiss server
 
