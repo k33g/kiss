@@ -8,6 +8,7 @@ import gololang.concurrent.workers.WorkerEnvironment
  Add some syntactic glue to kiss rest methods
 
  Augmentation of kiss.httpExchange
+ TODO: make a specific augmentation module
 ----
 augment  kiss.httpExchange.types.httpExchange {
   function $get = |this, templateRoute, work| -> this: route("GET", templateRoute, work)
@@ -25,6 +26,7 @@ augment  kiss.httpExchange.types.httpExchange {
   Promise helper: it's easier to make asynchronous work
 
    Augmentation of gololang.concurrent.async.Promise
+   TODO: make a specific augmentation module
 ----
 augment gololang.concurrent.async.Promise {
 ----
@@ -37,18 +39,22 @@ augment gololang.concurrent.async.Promise {
     return this: future()
   }
 ----
- `args` :
-
-  - first: anonymous function to execute
-  - second: optional, if true, then join thread
+ ...
 ----
-  function initializeWithThread = |this, args...| {
-    let closure = args: get(0)
+  function initializeWithThread = |this, closure| {
+    Thread({
+      this: initialize(closure)
+    }): start()
+    return this: future()
+  }
+----
+ ...
+----
+  function initializeWithJoinedThread = |this, closure| {
     let t = Thread({
       this: initialize(closure)
     })
-    t: start()
-    if args: size() > 1 { if args: get(1) is true { t: join()}}
+    t: start(): join()
     return this: future()
   }
 }
