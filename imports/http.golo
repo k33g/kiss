@@ -1,7 +1,7 @@
 module kiss.http
 
-function JSON = -> "application/json;charset=UTF-8"
-function HTML = -> "text/html;charset=UTF-8"
+#function JSON = -> "application/json;charset=UTF-8"
+#function HTML = -> "text/html;charset=UTF-8"
 
 struct response = {
   code,
