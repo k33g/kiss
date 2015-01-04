@@ -54,7 +54,8 @@ augment gololang.concurrent.async.Promise {
     let t = Thread({
       this: initialize(closure)
     })
-    t: start(): join()
+    t: start()
+    t: join()
     return this: future()
   }
 }
