@@ -1,4 +1,4 @@
-module humans
+module my.app
 
 import kiss
 import kiss.request
