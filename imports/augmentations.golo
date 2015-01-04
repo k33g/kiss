@@ -2,6 +2,9 @@ module kiss.augmentations
 
 import kiss.httpExchange
 
+----
+ Add some syntactic glue to kiss rest methods
+----
 augment  kiss.httpExchange.types.httpExchange {
   function $get = |this, templateRoute, work| -> this: route("GET", templateRoute, work)
   function $post = |this, templateRoute, work| -> this: route("POST", templateRoute, work)
@@ -13,3 +16,4 @@ augment  kiss.httpExchange.types.httpExchange {
   function $delete = |this, templateRoute, condition, work| -> this: route("DELETE", templateRoute, condition, work)
   function $put = |this, templateRoute, condition, work| -> this: route("PUT", templateRoute, condition, work)
 }
+
