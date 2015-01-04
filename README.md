@@ -500,6 +500,89 @@ source.addEventListener('error', function(e) {
 }, false);
 ```
 
+##BDD with Kiss `wip`
+
+```coffeescript
+module my.app
+
+import kiss
+import kiss.request
+import kiss.response
+import kiss.httpExchange
+import kiss.augmentations #<- you need this because of promises augmentation
+import kiss.http          #<- you need this to make http request
+import kiss.tests         #<- this is the bdd dsl
+import gololang.Async     #<- to use promises
+
+function main = |args| {
+
+  let server = HttpServer("localhost", 8080, |app| {
+
+    app: $get("/hello"
+    , |res, req| {
+      res: json(message("hello"))
+    })
+
+    app: $get("/hi"
+    , |res, req| {
+      res: json(message("hi"))
+    })
+
+  })
+
+  server: start(">>> http://localhost:"+ server: port() +"/")
+
+  # promise tool to make http request
+  let callRoute = |route| {
+    return promise(): initializeWithJoinedThread(|resolve, reject| {
+      try {
+        let r = getHttp("http://localhost:"+ server: port() + route, "application/json;charset=UTF-8")
+        resolve(r)
+      } catch (e) {
+        reject(e)
+      }
+    })
+  }
+
+  #--------------------------------
+  # run bdd tests
+  #--------------------------------
+
+  describe("Testing welcome routes", {
+
+    it("We can call /hello", {
+
+      callRoute("/hello"): onSet(|result| { # if success
+
+        expect(result: code()): toEqual(200)
+        expect(result: message()): toEqual("OK")
+        expect(result: text()): toEqual(JSON.stringify(message("hello")))
+
+      }): onFail(|err| { # if failed
+        println(err)
+        expect(true): toEqual(false)
+      })
+    })
+
+    it("We can call /hi", {
+
+      callRoute("/hi"): onSet(|result| { # if success
+
+        expect(result: code()): toEqual(200)
+        expect(result: message()): toEqual("OK")
+        expect(result: text()): toEqual(JSON.stringify(message("hi")))
+
+      }): onFail(|err| { # if failed
+        println(err)
+        expect(true): toEqual(false)
+      })
+    })
+
+  })
+
+}
+```
+
 ##Warm up Kiss server
 
 Sometimes, it could be interesting to warm up the serveur:
@@ -508,6 +591,8 @@ Sometimes, it could be interesting to warm up the serveur:
   server: start(">>> http://localhost:8080/")
   server: warmUp(20000) # number of loops as parameter, 10000 seems to be a good number
 ```
+
+
 
 
 #TODO:
