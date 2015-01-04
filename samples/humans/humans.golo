@@ -4,7 +4,7 @@ import kiss
 import kiss.request
 import kiss.response
 import kiss.httpExchange
-import kiss.augmentations
+import kiss.httpExchange.augmentations
 
 function main = |args| {
 

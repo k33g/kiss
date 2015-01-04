@@ -1,5 +1,9 @@
 module kiss.http
 
+import kiss.promise.augmentations
+import gololang.Async
+
+
 #function JSON = -> "application/json;charset=UTF-8"
 #function HTML = -> "text/html;charset=UTF-8"
 
@@ -30,5 +34,27 @@ function getHttp = |url, contenType| {
   } catch (err) {
     throw err
   }
+}
 
+# synchronous and asynchronous tools
+function getAndWaitHttpRequest = |url, contentType| {
+  return promise(): initializeWithJoinedThread(|resolve, reject| {
+    try {
+      let r = getHttp(url, contentType)
+      resolve(r)
+    } catch (e) {
+      reject(e)
+    }
+  })
+}
+
+function getHttpRequest = |url, contentType| {
+  return promise(): initializeWithThread(|resolve, reject| {
+    try {
+      let r = getHttp(url, contentType)
+      resolve(r)
+    } catch (e) {
+      reject(e)
+    }
+  })
 }

@@ -4,7 +4,7 @@ import kiss
 import kiss.request
 import kiss.response
 import kiss.httpExchange
-import kiss.augmentations
+import kiss.httpExchange.augmentations
 import kiss.http
 import kiss.tests
 
@@ -49,18 +49,6 @@ function main = |args| {
       java.lang.System.exit(1) #exit and restart
   })
 
-  # promise tool
-  let callRoute = |route| {
-    return promise(): initializeWithJoinedThread(|resolve, reject| {
-      try {
-        let r = getHttp("http://localhost:"+ server: port() + route, "application/json;charset=UTF-8")
-        resolve(r)
-      } catch (e) {
-        reject(e)
-      }
-    })
-  }
-
   #--------------------------------
   # run bdd tests
   #--------------------------------
@@ -72,30 +60,34 @@ function main = |args| {
 
     it("We can call /hello", {
 
-      callRoute("/hello"): onSet(|result| { # if success
+      getAndWaitHttpRequest("http://localhost:"+ server: port() + "/hello", "application/json;charset=UTF-8")
+        : onSet(|result| { # if success
 
-        expect(result: code()): toEqual(200)
-        expect(result: message()): toEqual("OK")
-        expect(result: text()): toEqual(JSON.stringify(message("hello")))
+            expect(result: code()): toEqual(200)
+            expect(result: message()): toEqual("OK")
+            expect(result: text()): toEqual(JSON.stringify(message("hello")))
 
-      }): onFail(|err| { # if failed
-        println(err)
-        expect(true): toEqual(false)
-      })
+        })
+        : onFail(|err| { # if failed
+            println(err)
+            expect(true): toEqual(false)
+        })
     })
 
     it("We can call /hi", {
 
-      callRoute("/hi"): onSet(|result| { # if success
+      getAndWaitHttpRequest("http://localhost:"+ server: port() + "/hi", "application/json;charset=UTF-8")
+        : onSet(|result| { # if success
 
-        expect(result: code()): toEqual(200)
-        expect(result: message()): toEqual("OK")
-        expect(result: text()): toEqual(JSON.stringify(message("hi")))
+            expect(result: code()): toEqual(200)
+            expect(result: message()): toEqual("OK")
+            expect(result: text()): toEqual(JSON.stringify(message("hi")))
 
-      }): onFail(|err| { # if failed
-        println(err)
-        expect(true): toEqual(false)
-      })
+        })
+        : onFail(|err| { # if failed
+            println(err)
+            expect(true): toEqual(false)
+        })
     })
 
   })

@@ -377,7 +377,9 @@ and now, you can use it, like that:
 - `request` structure (`kiss.request.types.request`)
 - and even with `httpServer` (`kiss.types.httpServer`)
 
-##Or, you can use `augmentations.golo`
+##Syntactic glue to kiss rest methods
+
+you can use `httpExchange.augmentations.golo`
 
 ```coffeescript
 module main
@@ -386,7 +388,7 @@ import kiss
 import kiss.request
 import kiss.response
 import kiss.httpExchange
-import kiss.augmentations
+import kiss.httpExchange.augmentations
 
 function main = |args| {
 
@@ -428,8 +430,7 @@ import kiss
 import kiss.request
 import kiss.response
 import kiss.httpExchange
-import kiss.augmentations
-
+import kiss.httpExchange.augmentations
 
 function main = |args| {
 
@@ -509,10 +510,9 @@ import kiss
 import kiss.request
 import kiss.response
 import kiss.httpExchange
-import kiss.augmentations #<- you need this because of promises augmentation
+import kiss.httpExchange.augmentations #<- you need this because of promises augmentation
 import kiss.http          #<- you need this to make http request
 import kiss.tests         #<- this is the bdd dsl
-import gololang.Async     #<- to use promises
 
 function main = |args| {
 
@@ -532,18 +532,6 @@ function main = |args| {
 
   server: start(">>> http://localhost:"+ server: port() +"/")
 
-  # promise tool to make http request
-  let callRoute = |route| {
-    return promise(): initializeWithJoinedThread(|resolve, reject| {
-      try {
-        let r = getHttp("http://localhost:"+ server: port() + route, "application/json;charset=UTF-8")
-        resolve(r)
-      } catch (e) {
-        reject(e)
-      }
-    })
-  }
-
   #--------------------------------
   # run bdd tests
   #--------------------------------
@@ -552,30 +540,34 @@ function main = |args| {
 
     it("We can call /hello", {
 
-      callRoute("/hello"): onSet(|result| { # if success
+      getAndWaitHttpRequest("http://localhost:"+ server: port() + "/hello", "application/json;charset=UTF-8")
+        : onSet(|result| { # if success
 
-        expect(result: code()): toEqual(200)
-        expect(result: message()): toEqual("OK")
-        expect(result: text()): toEqual(JSON.stringify(message("hello")))
+            expect(result: code()): toEqual(200)
+            expect(result: message()): toEqual("OK")
+            expect(result: text()): toEqual(JSON.stringify(message("hello")))
 
-      }): onFail(|err| { # if failed
-        println(err)
-        expect(true): toEqual(false)
-      })
+        })
+        : onFail(|err| { # if failed
+            println(err)
+            expect(true): toEqual(false)
+        })
     })
 
     it("We can call /hi", {
 
-      callRoute("/hi"): onSet(|result| { # if success
+      getAndWaitHttpRequest("http://localhost:"+ server: port() + "/hi", "application/json;charset=UTF-8")
+        : onSet(|result| { # if success
 
-        expect(result: code()): toEqual(200)
-        expect(result: message()): toEqual("OK")
-        expect(result: text()): toEqual(JSON.stringify(message("hi")))
+            expect(result: code()): toEqual(200)
+            expect(result: message()): toEqual("OK")
+            expect(result: text()): toEqual(JSON.stringify(message("hi")))
 
-      }): onFail(|err| { # if failed
-        println(err)
-        expect(true): toEqual(false)
-      })
+        })
+        : onFail(|err| { # if failed
+            println(err)
+            expect(true): toEqual(false)
+        })
     })
 
   })

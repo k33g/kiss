@@ -1,8 +1,6 @@
-module kiss.augmentations
+module kiss.httpExchange.augmentations
 
 import kiss.httpExchange
-import gololang.Async
-import gololang.concurrent.workers.WorkerEnvironment
 
 ----
  Add some syntactic glue to kiss rest methods
@@ -21,42 +19,3 @@ augment  kiss.httpExchange.types.httpExchange {
   function $delete = |this, templateRoute, condition, work| -> this: route("DELETE", templateRoute, condition, work)
   function $put = |this, templateRoute, condition, work| -> this: route("PUT", templateRoute, condition, work)
 }
-
-----
-  Promise helper: it's easier to make asynchronous work
-
-   Augmentation of gololang.concurrent.async.Promise
-   TODO: make a specific augmentation module
-----
-augment gololang.concurrent.async.Promise {
-----
- `env` is a worker environment
-----
-  function initializeWithWorker = |this, env, closure| {
-    env: spawn(|message| {
-      this: initialize(closure)
-    }): send("")
-    return this: future()
-  }
-----
- ...
-----
-  function initializeWithThread = |this, closure| {
-    Thread({
-      this: initialize(closure)
-    }): start()
-    return this: future()
-  }
-----
- ...
-----
-  function initializeWithJoinedThread = |this, closure| {
-    let t = Thread({
-      this: initialize(closure)
-    })
-    t: start()
-    t: join()
-    return this: future()
-  }
-}
-
