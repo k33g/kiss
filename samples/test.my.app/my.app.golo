@@ -10,6 +10,11 @@ import kiss.tests
 
 import gololang.Async
 
+function halfMatcher = -> DynamicObject()
+	: define("toBeHalf", |this, expectedValue| {
+		require(this: actualValue(): equals(expectedValue/2), this: actualValue() + " isn't half " + expectedValue)
+		println(" OK: " + this: actualValue() + " is half " + expectedValue)
+	})
 
 function main = |args| {
 
@@ -19,13 +24,13 @@ function main = |args| {
     app: $get("/hello"
     , |res, req| {
       res: json(message("hello"))
+      #res: code(666): json(message("hello")) -> to generate an error
     })
 
     app: $get("/hi"
     , |res, req| {
       res: json(message("hi"))
     })
-
 
   })
   
@@ -51,6 +56,9 @@ function main = |args| {
   #--------------------------------
   # run bdd tests
   #--------------------------------
+
+  getMatchers(): mixin(halfMatcher())
+  expect(4): toBeHalf(8)
 
   describe("Testing welcome routes", {
 
@@ -82,8 +90,9 @@ function main = |args| {
       })
     })
 
-
   })
 
+  println("-------------------------------------------------")
+  println("Ctrl + c to exit ...")
 
 }

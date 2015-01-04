@@ -38,9 +38,9 @@ function expect = |value|-> getMatchers(): actualValue(value)
 # specific matchers
 function halfMatcher = -> DynamicObject()
 	: define("toBeHalf", |this, expectedValue| {
-		require(this: actualValue(): equals(expectedValue/2), this: actualValue() + " isn't half " + expectedValue)
-		println(" OK: " + this: actualValue() + " is half " + expectedValue)
-	})
+		  require(this: actualValue(): equals(expectedValue/2), this: actualValue() + " isn't half " + expectedValue)
+		  println(" OK: " + this: actualValue() + " is half " + expectedValue)
+	  })
 
 function integerMatcher = -> DynamicObject()
 	: define("toBeInteger", |this| {
