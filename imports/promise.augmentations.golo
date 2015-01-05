@@ -7,7 +7,6 @@ import gololang.concurrent.workers.WorkerEnvironment
   Promise helper: it's easier to make asynchronous work
 
   Augmentation of gololang.concurrent.async.Promise
-  TODO: make a specific augmentation module
 ----
 augment gololang.concurrent.async.Promise {
 ----
