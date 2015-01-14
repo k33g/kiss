@@ -379,7 +379,7 @@ and now, you can use it, like that:
 
 ##Syntactic glue to kiss rest methods
 
-you can use `httpExchange.augmentations.golo`
+This is an augmentation of httpExchange structure
 
 ```coffeescript
 module main
@@ -388,7 +388,6 @@ import kiss
 import kiss.request
 import kiss.response
 import kiss.httpExchange
-import kiss.httpExchange.augmentations
 
 function main = |args| {
 
@@ -430,7 +429,6 @@ import kiss
 import kiss.request
 import kiss.response
 import kiss.httpExchange
-import kiss.httpExchange.augmentations
 
 function main = |args| {
 
@@ -524,7 +522,6 @@ import kiss
 import kiss.request
 import kiss.response
 import kiss.httpExchange
-import kiss.httpExchange.augmentations
 import kiss.http
 import kiss.views
 
@@ -571,7 +568,6 @@ import kiss
 import kiss.request
 import kiss.response
 import kiss.httpExchange
-import kiss.httpExchange.augmentations #<- you need this because of promises augmentation
 import kiss.http          #<- you need this to make http request
 import kiss.tests         #<- this is the bdd dsl
 
@@ -680,7 +676,6 @@ Sometimes, it could be interesting to warm up the serveur:
 
 #TODO:
 
-- merge kiss.httpExchange.augmentations to kiss.httpExchange (no more need import)
 - MongoDb Support
 - Redis (Jedis) Support
 - Explain how to "mavenize" a kiss project
