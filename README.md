@@ -501,6 +501,67 @@ source.addEventListener('error', function(e) {
 }, false);
 ```
 
+##View helper
+
+View helper is an augmented structure using Golo templating capabilities. You can define a template and pass data to it.
+Before compiling the template you can add static resource or load static resource (ie: html file).
+You need to import `kiss.views` module.
+
+- Define a view: `let myView = view(): template("your_string_template")`
+- add static resource: `myView: addResource(resourceId, resourceValue)`
+- load static resource: `myView: loadResource(resourceId, pathOfTheResourceAndName)`
+- use static resource inside the template: `<%= rsrc: get(resourceId) %>`
+- send dynamic data to the view: `myView: data(yourData)`
+- render the view: `myView: render()` (return a string)
+- use dynamic data inside the template: ie, if `yourData == list["Bob"]`, you have to use the `data` keyword inside the template, and you can use all methods attached to the data type: `<%= data: get(0) %>`
+
+###Sample
+
+```coffeescript
+module myview
+
+import kiss
+import kiss.request
+import kiss.response
+import kiss.httpExchange
+import kiss.httpExchange.augmentations
+import kiss.http
+import kiss.views
+
+
+function HomeView = -> view(): template("""
+  <h1><%= rsrc: get("title") %></h1>
+  <hr>
+  <h2><%= data: get(0) %></h2>
+  <h2><%= data: get(1) %></h2>
+  <hr>
+  <%= rsrc: get("footer") %>
+"""
+)
+
+function main = |args| {
+
+  # compile template
+  let homeView = HomeView()
+    : addResource("title", "Hello World From Kiss! with Love <3") # add once (static resource)
+    : loadResource("footer", "/footer.html") # add once (pre load static resource)
+
+
+  let server = HttpServer("localhost", 8080, |app| {
+
+    app: $get("/", |res, req| {
+      res: html(
+        homeView: data(list["Bob Morane", "John Doe"]): render()
+      )
+    })
+
+  })
+
+  server: start(">>> http://localhost:"+ server: port() +"/")
+
+}
+```
+
 ##BDD with Kiss `wip`
 
 ```coffeescript
@@ -619,6 +680,9 @@ Sometimes, it could be interesting to warm up the serveur:
 
 #TODO:
 
+- merge kiss.httpExchange.augmentations to kiss.httpExchange (no more need import)
+- MongoDb Support
+- Redis (Jedis) Support
 - Explain how to "mavenize" a kiss project
 - set cookie with max-age
 - https
