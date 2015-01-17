@@ -59,34 +59,19 @@ function main = |args| {
 
     it("We can call /hello", {
 
-      getAndWaitHttpRequest("http://localhost:"+ server: port() + "/hello", "application/json;charset=UTF-8")
-        : onSet(|result| { # if success
-
-            expect(result: code()): toEqual(200)
-            expect(result: message()): toEqual("OK")
-            expect(result: text()): toEqual(JSON.stringify(message("hello")))
-
-        })
-        : onFail(|err| { # if failed
-            println(err)
-            expect(true): toEqual(false)
-        })
+      let result = getHttp("http://localhost:"+ server: port() + "/hello", "application/json;charset=UTF-8")
+      expect(result: code()): toEqual(200)
+      expect(result: message()): toEqual("OK")
+      expect(result: text()): toEqual(JSON.stringify(message("hello")))
     })
 
     it("We can call /hi", {
 
-      getAndWaitHttpRequest("http://localhost:"+ server: port() + "/hi", "application/json;charset=UTF-8")
-        : onSet(|result| { # if success
+      let result = getHttp("http://localhost:"+ server: port() + "/hi", "application/json;charset=UTF-8")
+      expect(result: code()): toEqual(200)
+      expect(result: message()): toEqual("OK")
+      expect(result: text()): toEqual(JSON.stringify(message("hi")))
 
-            expect(result: code()): toEqual(200)
-            expect(result: message()): toEqual("OK")
-            expect(result: text()): toEqual(JSON.stringify(message("hi")))
-
-        })
-        : onFail(|err| { # if failed
-            println(err)
-            expect(true): toEqual(false)
-        })
     })
 
   })

@@ -35,26 +35,3 @@ function getHttp = |url, contenType| {
     throw err
   }
 }
-
-# synchronous and asynchronous tools
-function getAndWaitHttpRequest = |url, contentType| {
-  return promise(): initializeWithJoinedThread(|resolve, reject| {
-    try {
-      let r = getHttp(url, contentType)
-      resolve(r)
-    } catch (e) {
-      reject(e)
-    }
-  })
-}
-
-function getHttpRequest = |url, contentType| {
-  return promise(): initializeWithThread(|resolve, reject| {
-    try {
-      let r = getHttp(url, contentType)
-      resolve(r)
-    } catch (e) {
-      reject(e)
-    }
-  })
-}

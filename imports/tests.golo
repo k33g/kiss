@@ -16,6 +16,16 @@ augment matchers {
 		println(" OK: " + this: actualValue() + " is not equal to " + expectedValue)
 		return this
 	}
+  function toBeLessThan = |this, expectedValue| {
+    require(this: actualValue() < expectedValue, this: actualValue() + " isn't less than " + expectedValue)
+    println(" OK: " + this: actualValue() + " is less than " + expectedValue)
+    return this
+  }
+  function notToBeLessThan = |this, expectedValue| {
+    require(not this: actualValue() < expectedValue, this: actualValue() + " is less than " + expectedValue)
+    println(" OK: " + this: actualValue() + " is not less than " + expectedValue)
+    return this
+  }
 	function toBeInteger = |this| {
 		require(this: actualValue() oftype Integer.class, this: actualValue() + " is not an Integer")
 		println(" OK: " + this: actualValue() + " is an Integer")
@@ -40,4 +50,39 @@ function it = |titleOfTheSpec, specFunction| {
 	specFunction()
 }
 
-function expect = |value|-> matchers(): actualValue(value)
+function expect = |value| -> matchers(): actualValue(value)
+
+
+# Tools
+----
+  let t = timer(): start(|self| {
+    Thread.sleep(500_L)
+  }): stop(|self|{
+    println(self: duration() + " ms")
+  })
+----
+struct timer = {
+  begin, end, duration
+}
+augment timer {
+  function start = |this| {
+    this: begin(java.lang.System.currentTimeMillis())
+    return this
+  }
+  function start = |this, callback| {
+    this: begin(java.lang.System.currentTimeMillis())
+    callback(this)
+    return this
+  }
+  function stop = |this| {
+    this: end(java.lang.System.currentTimeMillis())
+    this: duration(this: end() - this: begin())
+    return this
+  }
+  function stop = |this, callback| {
+    this: end(java.lang.System.currentTimeMillis())
+    this: duration(this: end() - this: begin())
+    callback(this)
+    return this
+  }
+}
