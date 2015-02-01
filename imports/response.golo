@@ -58,8 +58,8 @@ augment response {
 
   function redirect = |this, location, code| {
       this: code(code): content("Redirecting ..."): headers(): set("Location", location)
-      this: content("Redirecting ...")
-      this: headers(): set("Location", location)
+      #this: content("Redirecting ...")
+      #this: headers(): set("Location", location)
       this: send()
       return this
   }
