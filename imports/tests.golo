@@ -33,6 +33,28 @@ augment matchers {
 	}
 }
 
+augmentation stringMatchers = {
+  function toContain = |this, expectedValue| {
+    require(
+      this: actualValue(): contains(expectedValue),
+      this: actualValue() + " doesn't contain " + expectedValue
+    )
+    println(" OK: " + this: actualValue() + " contains " + expectedValue)
+    return this
+  }
+  function toStartWith = |this, expectedValue| {
+    require(
+      this: actualValue(): startsWith(expectedValue),
+      this: actualValue() + " doesn't start with " + expectedValue
+    )
+    println(" OK: " + this: actualValue() + " starts with " + expectedValue)
+    return this
+  }
+}
+
+augment matchers with stringMatchers
+
+
 # suites : describe
 
 function describe = |whatIsBeingTested, suiteImplementation| { # suiteImplementation is a closure (lambda?)
