@@ -148,6 +148,9 @@ augment httpServer {
 
         application: response(): headers(): set("Content-Type", "application/json") #default json
 
+        #--- sandbox ---
+        this: application(application)
+
         try {
           work(application)
 

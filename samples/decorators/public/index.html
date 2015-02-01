@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+    <hello-title></hello-title>
+
+    <human-form></human-form>
+
+    <humans-list></humans-list>
+
+    <script src="js/vendors/riot.js"></script>
+    <script src="js/vendors/compiler.js"></script>
+    <script src="js/vendors/jquery-2.1.3.js"></script>
+    <script src="js/vendors/underscore.js"></script>
+    <script src="js/vendors/backbone.js"></script>
+
+    <script src="js/tags/hello-title.tag" type="riot/tag"></script>
+    <script src="js/tags/humans-list.tag" type="riot/tag"></script>
+    <script src="js/tags/human-form.tag" type="riot/tag"></script>
+
+<script>
+
+
+    var Human = Backbone.Model.extend({urlRoot:"/humans"});
+    var Humans = Backbone.Collection.extend({model:Human, url:"/humans"});
+
+    var humansColl = new Humans();
+
+    riot.mount("humans-list", {
+        collection: humansColl
+    })
+
+    riot.mount("human-form", {
+        modelDefinition: Human
+    });
+
+    riot.mount("hello-title");
+
+</script>
+</body>
+</html>
