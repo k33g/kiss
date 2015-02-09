@@ -3,26 +3,23 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>Kiss</title>
-    <link rel="stylesheet" href="bower_components/bijou/css/bijou.min.css">
-    <link rel="stylesheet" href="css/precode.css">
+
+    <link rel="stylesheet" href="css/kiss.css">
 </head>
 <body>
-    <div class="container">
-    </div>
+    <container md-file="intro.md"></container>
 
-    <script src="bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="bower_components/showdown/compressed/showdown.js"></script>
-    <script src="bower_components/vue/dist/vue.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="js/vendors/jquery-2.1.3.js"></script>
+    <script src="js/vendors/riot.js"></script>
+    <script src="js/vendors/compiler.js"></script>
+    <script src="js/vendors/showdown.js"></script>
+
+    <!-- components -->
+    <script src="js/tags/container.tag" type="riot/tag"></script>
+
 
     <script>
-        var converter = new Showdown.converter();
-        $(function() {
-            // Handler for .ready() called.
-            $.get("intro.md").then(function (data) {
-                $(".container").html(converter.makeHtml(data));
-            })
-        });
+        riot.mount("*");
     </script>
 </body>
 </html>
