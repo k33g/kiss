@@ -15,7 +15,8 @@ augment crypt {
   # For DES algorithm it will be 8 chars.
   function algorithm = |this| {
     if this: secret(): length(): equals(16) { return "AES" }
-    if this: secret(): length(): equals(8) { return "DES" } else {}
+    if this: secret(): length(): equals(8) { return "DES" }
+    if this: secret(): length(): equals(64) { return "PBEWithMD5AndTripleDES" } else {} # todo: to test
   }
   function generateKey = |this| -> SecretKeySpec(this: secret(): getBytes(), this: algorithm())
   function encrypt = |this, value| {
@@ -42,5 +43,6 @@ function main = |args| {
   println(crypt("bob-morane-00001"): decrypt("zggpA+4xfUKGyc1sA215bw=="))
   println(crypt("bobby-01"): encrypt("morane"))
   println(crypt("bobby-01"): decrypt("d8HBD7EVFVY="))
+
 
 }
