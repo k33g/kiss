@@ -5,19 +5,21 @@ import javax.crypto.Cipher
 import javax.crypto.spec.SecretKeySpec
 import sun.misc.BASE64Decoder
 import sun.misc.BASE64Encoder
+import com.sun.crypto.provider.Sun
+import com.sun.crypto.provider.SunJSSE
+import com.sun.crypto.provider.SunJCE
+import com.sun.crypto.provider.SunRsaSign
 
 struct crypt = {
-  secret
+  secret,
+  algorithm
 }
 
 augment crypt {
   # For AES alogithm your key must have 16 chars.
   # For DES algorithm it will be 8 chars.
-  function algorithm = |this| {
-    if this: secret(): length(): equals(16) { return "AES" }
-    if this: secret(): length(): equals(8) { return "DES" }
-    if this: secret(): length(): equals(64) { return "PBEWithMD5AndTripleDES" } else {} # todo: to test
-  }
+  # For PBEWithMD5AndTripleDES algorithm it will be 64 chars.
+
   function generateKey = |this| -> SecretKeySpec(this: secret(): getBytes(), this: algorithm())
   function encrypt = |this, value| {
     let key = this: generateKey()
@@ -39,10 +41,9 @@ augment crypt {
 }
 
 function main = |args| {
-  println(crypt("bob-morane-00001"): encrypt("morane"))
-  println(crypt("bob-morane-00001"): decrypt("zggpA+4xfUKGyc1sA215bw=="))
-  println(crypt("bobby-01"): encrypt("morane"))
-  println(crypt("bobby-01"): decrypt("d8HBD7EVFVY="))
-
+  println(crypt(): secret("bob-morane-00001"): algorithm("AES"): encrypt("morane"))
+  println(crypt(): secret("bob-morane-00001"): algorithm("AES"): decrypt("zggpA+4xfUKGyc1sA215bw=="))
+  println(crypt(): secret("bobby-01"): algorithm("DES"): encrypt("morane"))
+  println(crypt(): secret("bobby-01"): algorithm("DES"): decrypt("d8HBD7EVFVY="))
 
 }
