@@ -5,6 +5,13 @@ import kiss.uriTemplate
 import kiss.request
 import kiss.response
 
+#import java.nio.file.Files
+#import java.nio.file.Paths
+#import java.nio.file.Path
+
+import javax.imageio.ImageIO
+import java.io.File
+
 struct httpExchange = {
     response
   , request
@@ -87,13 +94,24 @@ augment httpExchange {
 
       if fileExists(java.io.File(path)) {
         let contentTypeOfAsset = this: contentTypeOfFile(path)
-        let content = fileToText(path, "UTF-8")
-        res
-          : contentType(contentTypeOfAsset)
-          : content(content)
-          : send()
-      }
 
+        try {
+          let bytes = java.nio.file.Files.readAllBytes(java.nio.file.Paths.get(path))
+          res
+            : contentType(contentTypeOfAsset)
+            : content(bytes)
+            : bytesSend()
+
+        } catch(e) {
+          e: printStackTrace()
+        }
+        # before
+        #let content = fileToText(path, "UTF-8") #<--
+        # res
+        #   : contentType(contentTypeOfAsset)
+        #   : content(content)
+        #   : send()
+      }
     })
 
     return this
