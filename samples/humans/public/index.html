@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <title>Kiss framework</title>
+
+  <link rel="stylesheet" type="text/css" href="materialize/css/materialize.min.css" media="screen,projection">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
+  <!--
+  <script src="tags/mqtt-socket-io.html" type="riot/tag"></script>
+  -->
+
+</head>
+<body>
+<div class="navbar-fixed">
+  <nav>
+    <div class="nav-wrapper purple darken-4">
+      <a href="#!" class="brand-logo center">Humans</a>
+      <ul class="right hide-on-med-and-down">
+        <li></li>
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/underscore-min.js"></script>
+<script src="js/backbone.js"></script>
+<script src="js/riot+compiler.min.js"></script>
+
+<script>
+
+  var Human = Backbone.Model.extend({urlRoot:"/humans"}),
+      Humans = Backbone.Collection.extend({url: "/humans",model:Human})
+
+</script>
+
+</body>
+</html>

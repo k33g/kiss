@@ -11,12 +11,25 @@ augment response {
 
   function send = |this| {
     this: message("OK") #TODO: send message?
-    #  this: exchange(): sendResponseHeaders(this: code(), this: content(): length())
+    #this: exchange(): sendResponseHeaders(this: code(), this: content(): length())
     this: exchange(): sendResponseHeaders(this: code(), this: content(): getBytes("UTF-8"): length()) #character encoding -> get number of bytes?
 
     this: exchange(): getResponseBody(): write(this: content(): getBytes())
+    #this: exchange(): getResponseBody(): write(this: content())
     this: exchange(): close()  
   }
+
+  function bytesSend = |this| {
+    this: message("OK") #TODO: send message?
+    this: exchange(): sendResponseHeaders(this: code(), this: content(): length())
+    #this: exchange(): sendResponseHeaders(this: code(), this: content(): getBytes("UTF-8"): length()) #character encoding -> get number of bytes?
+
+    #this: exchange(): getResponseBody(): write(this: content(): getBytes())
+    this: exchange(): getResponseBody(): write(this: content())
+    this: exchange(): close()
+  }
+
+
 
   function headers = |this| -> this: exchange(): getResponseHeaders()
 
