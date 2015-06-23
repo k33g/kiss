@@ -10,7 +10,7 @@
       -->
       <span class="card-title activator grey-text text-darken-4" name="messageText">{message}  </span>
 
-      <input name="loginText" type="text" class="form-control" placeholder="login">
+      <input name="loginText" type="text" class="form-control" placeholder="login (try with bob/morane (admin) or jane/doe or john/doe)">
       <input name="passwordText" type="password" class="form-control" placeholder="password">
       <button name="loginButton" class="btn btn-default" onclick="{ login }">Login</button>
       <button name="logoutButton" class="btn btn-default" onclick="{ logout }">Logout</button>
@@ -43,13 +43,8 @@
         this.loginText.value = "";
         this.passwordText.value = "";
 
-        /*
-        this.message = this.opts.user.get("firstName") +
-        " " + this.opts.user.get("lastName") +
-        " (" + this.opts.user.get("email") + ")";
-        */
         this.message = "Hello " + this.opts.connection.get("user").login;
-        this.opts.broker.emit("user:logon", null);
+        this.opts.broker.emit("user:logon", this.opts.connection.get("user"));
 
         this.update();
 
@@ -77,6 +72,7 @@
     };
 
     this.on('mount', function () {
+
       this.opts.connection.alreadyLogged(); // verify if connected and refresh
       if (this.opts.connection.get("user")) {
 
@@ -90,7 +86,7 @@
         this.passwordText.value = "";
 
         this.message = "Hello " + this.opts.connection.get("user").login;
-        this.opts.broker.emit("user:logon", null);
+        this.opts.broker.emit("user:logon", this.opts.connection.get("user"));
 
         this.update();
 

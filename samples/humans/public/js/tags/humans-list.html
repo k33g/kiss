@@ -1,0 +1,38 @@
+<humans-list>
+  <!-- humans-list -->
+  <div class="card white darken-1">
+    <div class="card-content black-text">
+      <span class="card-title black-text">Humans List</span>
+      <ul class="collection">
+        <li class="collection-item" each="{human in humans.models}">
+          {human.get("firstName")} {human.get("lastName")}
+        </li>
+      </ul>
+
+    </div>
+  </div>
+
+  <script>
+
+    this.opts.broker.observe(this);
+
+    this.humans = new App.collections.Humans();
+
+    this.updateCollection = function() {
+      this.humans.fetch().then(function(data){
+        this.update();
+      }.bind(this))
+    }
+
+    this.on("user:logon", function(data) {
+      this.updateCollection()
+    }.bind(this))
+
+    /*
+    this.on("add:human", function(data) {
+      this.updateCollection()
+    }.bind(this))
+    */
+
+  </script>
+</humans-list>

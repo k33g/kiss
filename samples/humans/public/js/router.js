@@ -5,6 +5,7 @@
 
     riot.route(function(what, param, id) {
       console.log("From Router ->",what, param, id);
+      broker.emit(what+":"+param, id);
 
       //http://localhost:8080/#load/features/help-card
       /*

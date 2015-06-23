@@ -1,0 +1,56 @@
+<features-card>
+
+  <div class="row">
+
+    <div class="col s12 m6">
+      <humans-admin-list if={ displayAdminList } broker={opts.broker}></humans-admin-list>
+    </div>
+
+    <div class="col s12 m6">
+      <humans-list if={ displayList } broker={opts.broker}></humans-list>
+    </div>
+
+    <div class="col s12 m6">
+      <human-form if={ displayForm } broker={opts.broker}></human-form>
+    </div>
+
+  </div>
+
+  <script>
+    this.opts.broker.observe(this);
+    this.displayList = false;
+    this.displayForm = false;
+    this.displayAdminList = false;
+
+    this.on("user:logon", function(data) {
+
+      //console.log("user:logon-->", data.features["humans"])
+
+      if (data.features["humans"] == "CRUD") {
+        this.displayAdminList = true;
+        this.displayList = false;
+        this.displayForm = true;
+      }
+
+      if (data.features["humans"] == "R") {
+        this.displayList = true;
+        this.displayAdminList = false;
+        this.displayForm = false;
+      }
+
+      this.update()
+
+    });
+
+    this.on("user:logout", function(data) {
+
+      this.displayList = false;
+      this.displayForm = false;
+      this.displayAdminList = false;
+
+      this.update()
+    });
+
+
+  </script>
+</features-card>

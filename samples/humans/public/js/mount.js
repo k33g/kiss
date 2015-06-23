@@ -11,6 +11,10 @@
     broker: broker
   });
 
+  riot.mount("features-card", {
+    broker: broker
+  });
+
   return app;
 
 }(App));
