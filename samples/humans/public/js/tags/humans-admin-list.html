@@ -1,0 +1,44 @@
+<humans-admin-list>
+  <!-- humans-list -->
+  <div class="card white darken-1">
+    <div class="card-content black-text">
+      <span class="card-title black-text">Humans Admin List</span>
+      <ul class="collection">
+        <li class="collection-item" each="{human in humans.models}">
+          {human.get("firstName")} {human.get("lastName")} <a href="#delete/human/{human.get('id')}" class="secondary-content"><i class="material-icons">delete</i></a>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+
+  <script>
+
+    this.opts.broker.observe(this);
+
+    this.humans = new App.collections.Humans();
+
+    this.updateCollection = function() {
+      this.humans.fetch().then(function(data){
+        this.update();
+      }.bind(this))
+    }
+
+    this.on("user:logon", function(data) {
+      this.updateCollection()
+    }.bind(this))
+
+    this.on("add:human", function(data) {
+      this.updateCollection()
+    }.bind(this))
+
+    this.on("delete:human", function(id) {
+      var human = new App.models.Human({id: id});
+      human.destroy().then(function() {
+        this.updateCollection()
+      }.bind(this));
+    }.bind(this))
+
+
+  </script>
+</humans-admin-list>

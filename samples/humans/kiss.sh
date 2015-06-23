@@ -1,4 +1,4 @@
 #!/bin/sh
 #
-golo golo --files ../../imports/*.golo  app.golo
+golo golo --classpath jars/*.jar --files ../../imports/*.golo  app.golo
 

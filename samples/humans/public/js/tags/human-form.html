@@ -1,0 +1,60 @@
+<human-form>
+
+  <div class="card white darken-1">
+    <div class="card-content black-text">
+      <span class="card-title black-text">Human Form</span>
+      <!-- content -->
+
+      <form class="col s12">
+        <div class="row">
+          <div class="input-field col s6">
+            <input placeholder="First Name" name="firstName" type="text" class="validate">
+          </div>
+          <div class="input-field col s6">
+            <input placeholder="Last Name" name="lastName" type="text" class="validate">
+          </div>
+        </div>
+        <!-- button(s)
+        <div class="row">
+          <div class="input-field col s12">
+          </div>
+        </div>
+        -->
+      </form>
+
+    </div>
+    <div class="card-action">
+      <a href="#" onclick={empty}>Cancel</a>
+      <a href="#" onclick={add}>Add Human</a>
+
+    </div>
+  </div>
+
+
+  <script>
+
+    this.opts.broker.observe(this);
+
+    this.add = function(data) {
+
+      var human = new App.models.Human({
+        firstName: this.firstName.value,
+        lastName: this.lastName.value
+      })
+
+      human.save().then(function(data) {
+        this.opts.broker.emit("add:human", data)
+        this.empty()
+      }.bind(this)).fail(function(err) {
+          console.log("err", err)
+      }.bind(this));
+
+    };
+
+    this.empty = function() {
+      this.firstName.value = "";
+      this.lastName.value = "";
+    };
+
+  </script>
+</human-form>
