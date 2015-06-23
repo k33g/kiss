@@ -1,5 +1,6 @@
 # Caution: Quick and dirty JsonWebToken Implementation.
 # It's better to use an external library
+# It's only a sandbox
 module kiss.jswtoken
 
 import kiss.crypto
@@ -12,6 +13,8 @@ augment jswtoken {
 
   function sign = |this, data, options| {
     let token = JSON.stringify(map[["GoloJSONWebToken","42"],["data", data], ["options", options]])
+    #let token = JSON.stringify(map[["data", data], ["options", options]])
+
     return this: encryptor(): encrypt(token)
   }
 

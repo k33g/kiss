@@ -11,6 +11,8 @@
   <!--
   <script src="tags/mqtt-socket-io.html" type="riot/tag"></script>
   -->
+  <script src="js/tags/login-form.html" type="riot/tag"></script>
+
 
 </head>
 <body>
@@ -25,17 +27,18 @@
   </nav>
 </div>
 
-<script src="js/jquery.min.js"></script>
-<script src="js/underscore-min.js"></script>
-<script src="js/backbone.js"></script>
-<script src="js/riot+compiler.min.js"></script>
+<login-form></login-form>
 
-<script>
+<script src="js/vendors/jquery.min.js"></script>
+<script src="js/vendors/underscore-min.js"></script>
+<script src="js/vendors/backbone.js"></script>
+<script src="js/vendors/riot+compiler.min.js"></script>
 
-  var Human = Backbone.Model.extend({urlRoot:"/humans"}),
-      Humans = Backbone.Collection.extend({url: "/humans",model:Human})
-
-</script>
+<script src="js/core.js"></script>
+<script src="js/users.js"></script>
+<script src="js/humans.js"></script>
+<script src="js/router.js"></script>
+<script src="js/mount.js"></script>
 
 </body>
 </html>

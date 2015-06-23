@@ -1,0 +1,105 @@
+
+<login-form>
+  <!-- login-form -->
+
+  <div class="card">
+
+    <div class="card-content">
+      <!--
+      <span class="card-title activator grey-text text-darken-4">Authentication</span>
+      -->
+      <span class="card-title activator grey-text text-darken-4" name="messageText">{message}  </span>
+
+      <input name="loginText" type="text" class="form-control" placeholder="login">
+      <input name="passwordText" type="password" class="form-control" placeholder="password">
+      <button name="loginButton" class="btn btn-default" onclick="{ login }">Login</button>
+      <button name="logoutButton" class="btn btn-default" onclick="{ logout }">Logout</button>
+    </div>
+
+  </div>
+
+  <script>
+
+    this.opts.broker.observe(this);
+
+    $(this.logoutButton).hide()
+
+    this.on('update', function () {
+
+    });
+
+    this.login = function (e) {
+
+      this.opts.connection.set({login: this.loginText.value, pwd: this.passwordText.value});
+
+      this.opts.connection.login().then(function (data) {
+
+        $(this.loginText).hide();
+        $(this.passwordText).hide();
+        $(this.loginButton).hide();
+        $(this.logoutButton).show();
+
+        console.log("currentUser[login]", this.opts.connection);
+        this.loginText.value = "";
+        this.passwordText.value = "";
+
+        /*
+        this.message = this.opts.user.get("firstName") +
+        " " + this.opts.user.get("lastName") +
+        " (" + this.opts.user.get("email") + ")";
+        */
+        this.message = "Hello " + this.opts.connection.get("user").login;
+        this.opts.broker.emit("user:logon", null);
+
+        this.update();
+
+      }.bind(this)).fail(function (err) {
+        this.message = err.responseText + " (" + err.statusText + " - " + err.status + ")";
+        console.log("login:err", err.responseText, err.statusText, err.status);
+        this.update();
+      }.bind(this));
+    };
+
+    this.logout = function (e) {
+      this.opts.connection.logout().clear();
+      console.log("currentUser[logout]", this.opts.connection)
+
+      this.message = "";
+
+      $(this.loginText).show();
+      $(this.passwordText).show();
+      $(this.loginButton).show();
+      $(this.logoutButton).hide();
+
+      this.opts.broker.emit("user:logout", null);
+
+      this.update()
+    };
+
+    this.on('mount', function () {
+      this.opts.connection.alreadyLogged(); // verify if connected and refresh
+      if (this.opts.connection.get("user")) {
+
+        $(this.loginText).hide();
+        $(this.passwordText).hide();
+        $(this.loginButton).hide();
+        $(this.logoutButton).show();
+
+        console.log("currentUser[login]", this.opts.connection);
+        this.loginText.value = "";
+        this.passwordText.value = "";
+
+        this.message = "Hello " + this.opts.connection.get("user").login;
+        this.opts.broker.emit("user:logon", null);
+
+        this.update();
+
+      }
+    });
+
+    this.on('unmount', function () {
+
+    });
+  </script>
+
+</login-form>
