@@ -44,6 +44,7 @@
     logout: function () {
       this.set("token", null);
       window.localStorage.removeItem('token');
+      window.localStorage.removeItem('user');
       $.ajaxSetup({
         headers: {
           'x-access-token': null
