@@ -1,4 +1,4 @@
 #!/bin/sh
 #
-golo golo --files ../../imports/*.golo  pimp.kiss.golo
+golo golo --files ../../src/main/golo/imports/*.golo  pimp.kiss.golo
 

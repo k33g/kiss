@@ -1,4 +1,4 @@
 #!/bin/sh
 #
-golo golo --files ../../imports/*.golo  404AndErrors.golo
+golo golo --files ../../src/main/golo/imports/*.golo  404AndErrors.golo
 

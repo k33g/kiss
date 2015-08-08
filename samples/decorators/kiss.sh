@@ -1,4 +1,4 @@
 #!/bin/sh
 #
-golo golo --files ../../imports/*.golo  humans.golo
+golo golo --files ../../src/main/golo/imports/*.golo  humans.golo
 
