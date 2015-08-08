@@ -671,12 +671,22 @@ Sometimes, it could be interesting to warm up the serveur:
   server: warmUp(20000) # number of loops as parameter, 10000 seems to be a good number
 ```
 
+#Build Kiss and use it as a standalone jar
+
+At the root of the kiss directory, type `mvn`. The kiss jar is built to `distribution` directory. See this files to use it:
+ 
+- `distribution/main.golo`
+- `distribution/kiss.sh`
+
+
+#Create a Kiss application as a standalone jar
+
+W.I.P.
 
 #TODO:
 
 - MongoDb Support
 - Redis (Jedis) Support
-- Explain how to "mavenize" a kiss project
 - set cookie with max-age
 - https
 - documentation

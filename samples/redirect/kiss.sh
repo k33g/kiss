@@ -1,4 +1,4 @@
 #!/bin/sh
 #
-golo golo --files ../../imports/*.golo  redirect.golo
+golo golo --files ../../src/main/golo/imports/*.golo  redirect.golo
 
